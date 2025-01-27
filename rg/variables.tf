@@ -1,6 +1,6 @@
 variable "region" {
     description = "Azure Region to create resources on"
-    type        = "string"
+    type        = string
     default     =  "ukwest"
 }
 
