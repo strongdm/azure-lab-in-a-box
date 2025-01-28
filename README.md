@@ -7,9 +7,9 @@
 This repository contains a set of modules that enable the user to deploy a quick lab to evaluate StrongDM capabilities, including
 - An optional Resource Group, VPC, Virtual Network, Security groups, NAT and Gateway sets
 - A StrongDM Gateway and a relay with a managed identity allowing them to use Azure Key Vault (WIP)
-- An SSH Target using StrongDM's CA for Authentication (WIP)
+- An SSH Target using StrongDM's CA for Authentication 
 - An PostgreSQL target (WIP)
-- Azure Read Only access on AZ CLI (WIP)
+- Azure Read Only access on AZ CLI
 - A Windows domain controller (WIP)
 - A Windows server target using certificate authentication (WIP)
 - An AKS Cluster (WIP)

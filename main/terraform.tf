@@ -8,6 +8,9 @@ terraform {
       source = "strongdm/sdm"
       version = ">=3.3.0"
     }
+    azuread = {
+      source = "hashicorp/azuread"
+    }
   }
 
   required_version = ">= 1.1.0"
@@ -25,3 +28,9 @@ provider "azurerm" {
   }
 
 }
+
+provider "azuread" {}
+
+data "azurerm_subscription" "subscription" {}
+
+data "azurerm_client_config" "current" {}
