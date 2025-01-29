@@ -16,7 +16,7 @@ output "domain_admin" {
 }
 
 output "domain_password" {
-    value = "${local.admin_password}!"
+    value = "${local.admin_password}"
 }
 
 output "thistagset" {
