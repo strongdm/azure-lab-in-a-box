@@ -1,5 +1,5 @@
 resource "azurerm_network_interface" "sdm-relay-nic" {
-  name                = "sdmrelay-nic"
+  name                = "${var.name}-sdmrelay-nic"
   location            = var.region
   resource_group_name = coalesce(var.rg,one(module.rg[*].rgname))
 
@@ -38,7 +38,7 @@ resource "sdm_resource" "ssh-relay" {
 
 
 resource "azurerm_linux_virtual_machine" "sdmrelay" {
-  name                  = "sdmr01"
+  name                  = "${var.name}-sdmr01"
   resource_group_name   = coalesce(var.rg,one(module.rg[*].rgname))
   location              = var.region
   size                  = "Standard_B1s"  # Minimal VM size

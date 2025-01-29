@@ -9,7 +9,7 @@ resource "azurerm_public_ip" "sdm-gw-ip" {
 
 
 resource "azurerm_network_interface" "sdm-gw-nic" {
-  name                = "sdmgw-nic"
+  name                = "${var.name}-sdmgw-nic"
   location            = var.region
   resource_group_name = coalesce(var.rg,one(module.rg[*].rgname))
 
@@ -52,7 +52,7 @@ resource "sdm_resource" "ssh-gateway" {
 }
 
 resource "azurerm_linux_virtual_machine" "sdmgw" {
-  name                  = "sdmgw01"
+  name                  = "${var.name}-sdmgw01"
   resource_group_name   = coalesce(var.rg,one(module.rg[*].rgname))
   location              = var.region
   size                  = "Standard_B1s"  # Minimal VM size
