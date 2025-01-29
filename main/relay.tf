@@ -68,7 +68,11 @@ resource "azurerm_linux_virtual_machine" "sdmrelay" {
     sku       = "22_04-lts"
     version   = "latest"
   }
-
+  
+  identity {
+    type = "SystemAssigned"
+  }
+  
   # Custom VM Tags
   tags = merge (var.tagset, {
             network = "Private"
