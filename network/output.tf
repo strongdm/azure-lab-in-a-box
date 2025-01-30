@@ -13,3 +13,7 @@ output "vnid" {
 output "vnname" {
     value = azurerm_virtual_network.vn.name
 }
+
+output "natip" {
+    value = azurerm_public_ip.nat.ip_address
+}

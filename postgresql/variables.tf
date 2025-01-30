@@ -17,7 +17,7 @@ variable "name" {
 variable "target_user" {
   description = "User for Health check"
   type        = string
-  default     = "sdmadmin"
+  default     = "pgadmin"
 }
 
 variable "region" {
@@ -28,6 +28,18 @@ variable "region" {
 
 variable "rg" {
     description = "Name of existing resource group to provision resources on"
+    type        = string
+    default     = null
+}
+
+variable "relay_ip" {
+    description = "Relay IP to be allowed access"
+    type        = string
+    default     = null
+}
+
+variable "key_vault_id" {
+    description = "URL of the Key Vault where to store secrets"
     type        = string
     default     = null
 }
@@ -45,8 +57,8 @@ locals {
   admin_password = random_password.admin_password.result
   thistagset = merge (var.tagset, {
     network = "Private"
-    class   = "sdminfra"
-    Name    = "sdm-${var.name}-domain-controller"
+    class   = "target"
+    Name    = "sdm-${var.name}-postgresql"
     }
   )  
 }

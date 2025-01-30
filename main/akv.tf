@@ -20,6 +20,12 @@ resource "azurerm_role_assignment" "sdmrelay" {
   scope           = azurerm_key_vault.sdm.id
 }
 
+resource "azurerm_role_assignment" "currentuser" {
+  principal_id   = data.azurerm_client_config.current.object_id
+  role_definition_name = "Key Vault Administrator"  # This allows the Managed Identity to read secrets
+  scope           = azurerm_key_vault.sdm.id
+}
+
 resource "sdm_secret_store" "akv" {
     azure_store {
         name = "Azure Key Vault ${var.name}"
