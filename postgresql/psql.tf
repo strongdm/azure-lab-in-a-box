@@ -37,10 +37,14 @@ resource "azurerm_key_vault_secret" "psql-username" {
   name         = "${var.name}-psql-username"
   value        = "${var.target_user}@${random_pet.azurerm_postgresql_server_name.id}"
   key_vault_id = var.key_vault_id
+  tags = local.thistagset
+
 }
 
 resource "azurerm_key_vault_secret" "psql-password" {
   name         = "${var.name}-psql-password"
   value        = local.admin_password
   key_vault_id = var.key_vault_id
+  tags = local.thistagset
+
 }
