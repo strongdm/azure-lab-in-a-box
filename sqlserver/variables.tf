@@ -14,10 +14,16 @@ variable "name" {
   type        = string
 }
 
+variable "dbname" {
+  description = "Database name to be created in the SQL Server"
+  type        = string
+  default     = "labdb"
+}
+
 variable "target_user" {
   description = "User for Health check"
   type        = string
-  default     = "pgadmin"
+  default     = "sqlserver"
 }
 
 variable "region" {
@@ -58,7 +64,7 @@ locals {
   thistagset = merge (var.tagset, {
     network = "Private"
     class   = "target"
-    Name    = "sdm-${var.name}-postgresql"
+    Name    = "sdm-${var.name}-sqlserver"
     }
   )  
 }

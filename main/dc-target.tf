@@ -10,6 +10,7 @@ module "dc" {
 
 resource "sdm_resource" "dc" {
     count = var.create_domain_controller == false ? 0 : 1
+    depends_on = [ module.dc ]
     rdp {
         name     = "domain-controller"
         hostname = one(module.dc[*].dc_ip)

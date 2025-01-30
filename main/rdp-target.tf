@@ -18,6 +18,7 @@ module "windowstarget" {
 
 resource "sdm_resource" "windows-target" {
     count = var.create_windows_target == false ? 0 : 1
+    depends_on = [ module.windowstarget ]
     rdp {
         name     = "windows-password"
         hostname = one(module.windowstarget[*].ip)
@@ -32,6 +33,7 @@ resource "sdm_resource" "windows-target" {
 
 resource "sdm_resource" "windows-target-rdp" {
     count = var.create_windows_target == false ? 0 : 1
+    depends_on = [ module.windowstarget ]
     rdp_cert {
         name     = "windows-ca"
         hostname = one(module.windowstarget[*].ip)

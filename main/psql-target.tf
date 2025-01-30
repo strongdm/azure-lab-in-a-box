@@ -14,7 +14,7 @@ module "postgresql" {
 
 resource "sdm_resource" "pgsqlserver" {
     count       = var.create_postgresql == false ? 0 : 1
-
+    depends_on = [ module.postgresql ]
     postgres {
         database = "postgres"
         name     = "psql-server"

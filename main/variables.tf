@@ -40,6 +40,12 @@ variable "create_postgresql" {
   default     = false
 }
 
+variable "create_mssql" {
+  description = "Flag to create a Microsoft SQL Server instance"
+  type        = bool
+  default     = false
+}
+
 variable "create_domain_controller" {
   description = "Flag to create a domain controller"
   type        = bool

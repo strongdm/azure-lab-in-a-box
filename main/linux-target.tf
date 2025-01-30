@@ -11,6 +11,7 @@ module "linux-target" {
 
 resource "sdm_resource" "ssh-ca-target" {
     count = var.create_linux_target == false ? 0 : 1
+    depends_on = [ module.linux-target ]
     ssh_cert {
         name     = "ssh-ca-target"
         hostname = one(module.linux-target[*].ip)
