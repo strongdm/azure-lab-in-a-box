@@ -1,7 +1,7 @@
 # StrongDM Lab in a Box for Azure
-> [!CAUTION]
-> This is currently work in progress and could be broken at any time.
-> We will attempt to keep tagged versions "working"
+> [!Warning]
+> While we will attempt to keep tagged versions "working", there are a lot of improvements being shipped.
+> Update with caution :)
 
 
 This repository contains a set of modules that enable the user to deploy a quick lab to evaluate StrongDM capabilities, including
@@ -12,7 +12,7 @@ This repository contains a set of modules that enable the user to deploy a quick
 - Azure Read Only access on AZ CLI
 - A Windows domain controller 
 - A Windows server target using certificate authentication 
-- An AKS Cluster (WIP)
+- An AKS Cluster 
 
 All resources are tagged according to variables set in the module, in order to set adequate access roles in StrongDM
 
@@ -33,20 +33,21 @@ specially if you're using the Windows CA target, as it will use the local proces
 
 ## Variables
 - Network
-  - rg: Id of an existing VPC. If it's null a new VPC will be created. If this variable is provided all of the related network variables will be required
+  - region: Azure region to deploy the resources to (defaults to ukwest)
+  - rg: Id of an existing Resource group. If it's null a new resource group will be created. 
+  - vn: Id of an existing Virtual Network. If it's null a new vn will be created. If this variable is provided all of the related network variables will be required
   - gateway_subnet: ID of a Public Subnet
-  - relay_subnet(-b,-c): Private subnets to deploy resources
-  - private_sg: Id of the Security group for private machines (reachable by the relay)
-  - public_sg: ID of the public security group
+  - relay_subnet: Private subnet to deploy resources
 The module will not verify if the right network configuration is set so make sure to refer to the SDM [Ports Guide](https://www.strongdm.com/docs/admin/deployment/ports-guide/)
 
 - Resources
   - create_linux_target: Create a linux target resource with ssh ca authentication
-  - create_postgresql: Create an RDS Postgresql database using password authentication, retrieving credentials from secrets manager
+  - create_postgresql: Create a Simple Postgresql database using password authentication, retrieving credentials from Key Vault
+  - create_mssql: Create a Microsoft SQL Server database using password authentication, retrieving credentials from Key Vault
   - create_aks: Create a Kubernetes Cluster
   - create_domain_controller: Create a Windows Domain Controller
   - create_windows_target: Create a Windows RDP target
-  - create_az_ro: Create a Role that can be assumed by the gateway to access AWS
+  - create_az_ro: Create a service principal to be used to access Azure with read only privileges. Passwords expire every 10 days so you'll need to re-run ```terraform apply``` to update the password in StrongDM
  
 - Other Variables:
   - tagset: tags to apply to all resources
