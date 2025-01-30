@@ -72,7 +72,7 @@ Setting up a Domain controller takes several reboots. This is implemented by a p
 
 This means that of cource that you cannot deploy the "Windows target" until the domain controller is up and running
 
-#Infrastructure Diagram
+## Infrastructure Diagram
 Once deployed, you can expect your resource group to look like the example below
 
 ![StrongDM Permissions](doc/partnertraining.png?raw=true)
