@@ -10,9 +10,14 @@ resource "azurerm_network_interface" "sdm-dc-nic" {
   }
 }
 #TODO: Port to powershell in case this is running on Windows
+#data "external" "rdpcertificate" {
+#    program = ["bash", "${path.module}/windowsrdpca.sh"]
+#}
+
 data "external" "rdpcertificate" {
-    program = ["bash", "${path.module}/windowsrdpca.sh"]
+    program = [local.interpreter, local.script]
 }
+
 
 resource "azurerm_windows_virtual_machine" "windowsdc" {
   name                = "${var.name}-dc1"

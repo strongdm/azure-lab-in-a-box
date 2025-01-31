@@ -43,6 +43,9 @@ resource "random_password" "admin_password" {
 
 locals {
   admin_password = random_password.admin_password.result
+  is_linux = length(regexall("c:", lower(abspath(path.root)))) > 0
+  interpreter = local.is_linux ? "powershell" : "bash"
+  script      = format("%s/%s",path.module,local.is_linux ? "windowsrdpca.ps1" : "windowsrdpca.sh")
   thistagset = merge (var.tagset, {
     network = "Private"
     class   = "sdminfra"
