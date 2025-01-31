@@ -27,6 +27,15 @@ Export the environment variables
 export SDM_API_ACCESS_KEY=auth-aaabbbbcccccc
 export SDM_API_SECRET_KEY=jksafhlksdhfsahgghdslkhaslghasdlkghlasdkhglkshg
 ```
+or in Powershell
+```powershell
+$env:SDM_API_ACCESS_KEY="auth-xxxxxx888x8x88x8x6"
+$env:SDM_API_SECRET_KEY="X4fasfasfasfasfasfsafaaqED34ge5343CkQ"
+```
+> [!NOTE]
+> The verification of the operating system is done based on the presence of "c:" in the module path. If there is no c:,
+> the module will not assume you're using Windows.
+
 Make sure you're logged into sdm with 
 ```sdm login```
 specially if you're using the Windows CA target, as it will use the local process to pull the Windows CA Certificate
@@ -67,7 +76,14 @@ terraform plan
 terraform apply
 ``` 
 
-## Windows Warnings
+If you're running this in Windows you may have to set your execution policy accordingly as the script will run some local Powershell to retrieve the CA certific
+ate
+
+```powershell
+set-executionpolicy bypass
+```
+
+## Windows Target Warnings
 Setting up a Domain controller takes several reboots. This is implemented by a persistent Powershell script that runs at each reboot and has flow control through creating some "flag files" in c:\ with the "done" extension as each step is completed. You can reference the full Powershell script [here](dc/install-dc.ps1.tpl).
 
 This means that of cource that you cannot deploy the "Windows target" until the domain controller is up and running
