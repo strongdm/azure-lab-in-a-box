@@ -39,7 +39,7 @@ resource "sdm_node" "gateway" {
 
 resource "sdm_resource" "ssh-gateway" {
     ssh {
-        name     = "sdm-gateway"
+        name     = "${var.name}-sdm-gateway"
         hostname = azurerm_network_interface.sdm-gw-nic.private_ip_address
         username = "azureuser"
         port     = 22

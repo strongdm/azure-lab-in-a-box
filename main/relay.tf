@@ -23,7 +23,7 @@ resource "sdm_node" "relay" {
 
 resource "sdm_resource" "ssh-relay" {
     ssh {
-        name     = "sdm-relay"
+        name     = "${var.name}-sdm-relay"
         hostname = azurerm_network_interface.sdm-relay-nic.private_ip_address
         username = "azureuser"
         port     = 22

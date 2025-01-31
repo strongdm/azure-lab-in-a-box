@@ -17,7 +17,7 @@ resource "sdm_resource" "pgsqlserver" {
     depends_on = [ module.postgresql ]
     postgres {
         database = "postgres"
-        name     = "psql-server"
+        name     = "${var.name}-psql-server"
         password = "${var.name}-psql-password"
         port     = 5432
         username = "${var.name}-psql-username"
