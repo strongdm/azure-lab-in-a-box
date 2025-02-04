@@ -70,6 +70,12 @@ variable "create_az_ro" {
   default     = false
 }
 
+variable "create_hcvault" {
+  description = "Create a HashiCorp Vault Development Instance for testing"
+  type        = bool
+  default     = false
+}
+
 variable "tagset" {
   description = "Set of Tags to apply to StrongDM resources"
   type        = map(string)

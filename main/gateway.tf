@@ -60,6 +60,7 @@ resource "azurerm_linux_virtual_machine" "sdmgw" {
   user_data             = base64encode(templatefile("${path.module}/gw-provision.tpl", {
     sdm_relay_token    = sdm_node.gateway.gateway[0].token
     target_user        = "azureuser"
+    vault_ip           = ""
     }
    )
   )
