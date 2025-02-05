@@ -3,7 +3,7 @@ output "relay_subnet" {
 }
 
 output "gateway_subnet" {
-    value = azurerm_subnet.relay.id
+    value = azurerm_subnet.gateway.id
 }
 
 output "vnid" {

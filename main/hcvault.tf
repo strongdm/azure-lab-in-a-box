@@ -25,6 +25,7 @@ resource "sdm_resource" "ssh-hcvault" {
 }
 
 resource "sdm_secret_store" "hcvault" {
+    count = var.create_hcvault == false ? 0 : 1
     vault_token {
         name = "HashiCorp Vault ${var.name}"
         tags = var.tagset

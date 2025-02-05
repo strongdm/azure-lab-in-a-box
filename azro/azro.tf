@@ -17,7 +17,7 @@ resource "azuread_application" "sdm" {
 resource "azuread_service_principal" "sdm" {
   client_id                    = azuread_application.sdm.client_id
   app_role_assignment_required = false
-  owners                       = [data.azuread_client_config.current.object_id,"bc6eb41d-f638-47f8-aa5f-f9fa4eb226f6"]
+  owners                       = [data.azuread_client_config.current.object_id]
 
   feature_tags {
     enterprise = false
