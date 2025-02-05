@@ -55,11 +55,13 @@ resource "azurerm_linux_virtual_machine" "sdmgw" {
   name                  = "${var.name}-sdmgw01"
   resource_group_name   = coalesce(var.rg,one(module.rg[*].rgname))
   location              = var.region
+  network_security_group = 
   size                  = "Standard_B1s"  # Minimal VM size
   network_interface_ids = [azurerm_network_interface.sdm-gw-nic.id]
   user_data             = base64encode(templatefile("${path.module}/gw-provision.tpl", {
     sdm_relay_token    = sdm_node.gateway.gateway[0].token
     target_user        = "azureuser"
+    vault_ip           = ""
     }
    )
   )
