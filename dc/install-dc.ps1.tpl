@@ -92,10 +92,7 @@ $csInsContent = @'
                         -Force
                     $service = Get-Service -Name "CertSvc"
                     if ($service.Status -eq "Running") {
-                        "Importing StrongDM Certificates"
-                        Import-Certificate -FilePath "c:\rdp.cer" -CertStoreLocation "Cert:\LocalMachine\Root"
-                        certutil -dspublish -f C:\rdp.cer RootCA 
-                        certutil -dspublish -f C:\rdp.cer NTAuthCA
+                        "Ready to continue"
                     } else { "ADCS Is not installed yet. Cannot Import certificates" } 
                     "ADCS Set up." | Out-File "C:\adcs.done"
                     
@@ -115,7 +112,9 @@ $dcSetContent = @'
     Import-Module ADDSDeployment
     Import-Module DnsServer
     if (((-not (Test-Path "C:\sdm.done")) -and (Test-Path "C:\adcs.done"))) {
-
+        Import-Certificate -FilePath "c:\rdp.cer" -CertStoreLocation "Cert:\LocalMachine\Root"
+        certutil -dspublish -f C:\rdp.cer RootCA 
+        certutil -dspublish -f C:\rdp.cer NTAuthCA
         # Ensure the required modules are loaded
         Import-Module GroupPolicy
         $service = Get-Service -Name "NTDS"
@@ -204,8 +203,8 @@ $dcSetAc = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-Executi
 # Register the scheduled task
 Register-ScheduledTask -Action $dcInsAc -Principal $principal -Trigger $trigger1 -TaskName "InstallAD" -Description "Scheduled task to run script in 5 minutes."
 Register-ScheduledTask -Action $dcConfAc -Principal $principal -Trigger $trigger5 -TaskName "ConfigureAD" -Description "Scheduled task to run script in 5 minutes."
-Register-ScheduledTask -Action $dcSetAc -Principal $principal -Trigger $trigger10 -TaskName "FinalSetup" -Description "Scheduled task to run script in 5 minutes."
 Register-ScheduledTask -Action $csInsAc -Principal $principal -Trigger $trigger15 -TaskName "InstallCS" -Description "Scheduled task to run script in 5 minutes."
+Register-ScheduledTask -Action $dcSetAc -Principal $principal -Trigger $trigger20 -TaskName "FinalSetup" -Description "Scheduled task to run script in 5 minutes."
 
 
 
