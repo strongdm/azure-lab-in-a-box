@@ -47,6 +47,7 @@ resource "azurerm_linux_virtual_machine" "sdmrelay" {
     sdm_relay_token    = sdm_node.relay.relay[0].token
     target_user        = "azureuser"
     vault_ip           = one(module.hcvault[*].ip)
+    sdm_domain         = element(split(":", data.env_var.sdm_api.value), 0)
     }
    )
   )

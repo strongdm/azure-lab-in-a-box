@@ -61,6 +61,7 @@ resource "azurerm_linux_virtual_machine" "sdmgw" {
     sdm_relay_token    = sdm_node.gateway.gateway[0].token
     target_user        = "azureuser"
     vault_ip           = ""
+    sdm_domain         = element(split(":", data.env_var.sdm_api.value), 0)
     }
    )
   )
