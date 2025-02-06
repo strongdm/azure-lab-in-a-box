@@ -23,15 +23,11 @@ resource "azurerm_role_assignment" "hcvault" {
 
 data "azurerm_subscription" "this" {}
 
-data "azurerm_resource_group" "this" {
-  name = var.rg
-}
-
 data "azurerm_client_config" "this" {}
 
 resource "azurerm_role_assignment" "azureauth" {
   principal_id   = azurerm_linux_virtual_machine.vault.identity[0].principal_id
-  scope          = data.azurerm_resource_group.this.id
+  scope          = var.rgid
   role_definition_name = "Reader"  # Built-in Read-only role
   #scope           = "${data.azurerm_subscription.this.name}/resourceGroups/${var.rg}"
 }

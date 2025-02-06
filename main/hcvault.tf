@@ -1,3 +1,4 @@
+#TODO: Fix RGID for pre-existing RG
 module "hcvault" {
     source = "../hcvault"
     count  = var.create_hcvault == false ? 0 : 1
@@ -8,6 +9,7 @@ module "hcvault" {
     subnet = coalesce(var.relay_subnet,one(module.network[*].relay_subnet))
     akvid  = azurerm_key_vault.sdm.id
     akvdns = azurerm_key_vault.sdm.name
+    rgid   = one(module.rg[*].rgid)
 
 }
 

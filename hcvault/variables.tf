@@ -47,6 +47,12 @@ variable "rg" {
     default     = null
 }
 
+variable "rgid" {
+    description = "ID of existing resource group to provision resources on"
+    type        = string
+    default     = null
+}
+
 variable "vault_version" {
     description = "Version of HashiCorp Vault to download"
     type        = string
