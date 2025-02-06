@@ -189,7 +189,7 @@ $dcSetContent | Out-File -FilePath $dcSetPath -Force
 
 $trigger1 = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1)
 $trigger5 = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(5)
-$trigger10 = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(10)
+$trigger20 = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(20)
 $trigger15 = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(15)
 
 # Set the task to run with highest privileges
