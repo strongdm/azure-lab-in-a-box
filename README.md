@@ -110,5 +110,5 @@ Once deployed, you can expect your resource group to look like the example below
 
 ![StrongDM Permissions](doc/partnertraining.png?raw=true)
 ## Issues, comments, feedback
-This repository is maintained with :blue_heart: by @HameArm, @ncorrare and other members of the @StrongDM team.
+This repository is maintained with :blue_heart: by [Hamish](https://github.com/HameArm), [Nico](https://github.com/ncorrare) and other members of the [StrongDM](https://github.com/strongdm) team.
 Please send us your issues and PR through the GitHub functionality, and we will get to them as soon as possible.
