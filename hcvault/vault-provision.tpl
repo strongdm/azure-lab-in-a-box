@@ -88,13 +88,19 @@ sudo systemctl daemon-reload
 
 sudo service vault start
 sudo systemctl enable vault.service
+echo "Waiting for Vault to start"
+sleep 30
+export VAULT_ADDR=http://${ip}:8200/
 
 vault operator init \
     -recovery-shares=3 \
     -recovery-threshold=2 \
-    -format=json > vault-init.json
+    -format=json | tee ~/vault-init.json
+    
+echo "Waiting for Vault to generate keys"
+sleep 30
 
-export VAULT_TOKEN=$(cat vault-init.json | jq -r .root_token)
+export VAULT_TOKEN=$(cat ~/vault-init.json | jq -r .root_token)
 
 vault auth enable azure
 vault write auth/azure/config tenant_id=${tenant} resource=https://management.azure.com/
