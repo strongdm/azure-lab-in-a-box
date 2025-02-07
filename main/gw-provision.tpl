@@ -10,7 +10,12 @@ curl -J -O -L https://app.strongdm.com/releases/cli/linux && unzip sdmcli* && rm
 systemctl disable ufw.service
 systemctl stop ufw.service
 # Install SDM
-sudo ./sdm install --relay --token=$SDM_RELAY_TOKEN --user=$TARGET_USER | logger -t sdminstall
+%{ if sdm_domain != "" }
+sudo ./sdm install --relay --token=$SDM_RELAY_TOKEN --user=$TARGET_USER --domain=${sdm_domain}| logger -t sdminstall
+%{ endif }
+%{ if sdm_domain == "" }
+sudo ./sdm install --relay --token=$SDM_RELAY_TOKEN --user=$TARGET_USER| logger -t sdminstall
+%{ endif }
 %{ if vault_ip != "" }
 #Give Vault 120 seconds to warm up
 sleep 120

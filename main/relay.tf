@@ -46,7 +46,8 @@ resource "azurerm_linux_virtual_machine" "sdmrelay" {
   user_data             = base64encode(templatefile("${path.module}/gw-provision.tpl", {
     sdm_relay_token    = sdm_node.relay.relay[0].token
     target_user        = "azureuser"
-    vault_ip           = one(module.hcvault[*].ip)
+    vault_ip           = var.create_hcvault == false ? "" : one(module.hcvault[*].ip)
+    sdm_domain         = data.env_var.sdm_api.value == "" ? "" : coalesce(join(".", slice(split(".", element(split(":", data.env_var.sdm_api.value), 0)), 1, length(split(".", element(split(":", data.env_var.sdm_api.value), 0))))),"")
     }
    )
   )

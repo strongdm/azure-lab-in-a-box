@@ -13,6 +13,7 @@ This repository contains a set of modules that enable the user to deploy a quick
 - A Windows domain controller 
 - A Windows server target using certificate authentication 
 - An AKS Cluster 
+- A HashiCorp Vault single instance cluster
 
 All resources are tagged according to variables set in the module, in order to set adequate access roles in StrongDM
 
@@ -32,13 +33,27 @@ or in Powershell
 $env:SDM_API_ACCESS_KEY="auth-xxxxxx888x8x88x8x6"
 $env:SDM_API_SECRET_KEY="X4fasfasfasfasfasfsafaaqED34ge5343CkQ"
 ```
+
+> [!NOTE]
+> If your control plane is in the UK, or the EU, make sure that the SDM_HOST_API variable is correctly set.
+> Gateways and relays *will* use this variable as well to register against the right tenant
+
+```bash
+export SDM_API_HOST=api.uk.strongdm.com:443
+```
+or in Powershell
+```powershell
+$env:SDM_API_HOST="api.uk.strongdm.com:443"
+```
+
+Make sure you're logged into sdm with a user that has enough privilege to read the CA certifcate for Windows:
+```sdm login
+sdm admin rdp view-ca
+```
+
 > [!NOTE]
 > The verification of the operating system is done based on the presence of "c:" in the module path. If there is no c:,
 > the module will not assume you're using Windows.
-
-Make sure you're logged into sdm with 
-```sdm login```
-specially if you're using the Windows CA target, as it will use the local process to pull the Windows CA Certificate
 
 ## Variables
 - Network
@@ -57,6 +72,7 @@ The module will not verify if the right network configuration is set so make sur
   - create_domain_controller: Create a Windows Domain Controller
   - create_windows_target: Create a Windows RDP target
   - create_az_ro: Create a service principal to be used to access Azure with read only privileges. Passwords expire every 10 days so you'll need to re-run ```terraform apply``` to update the password in StrongDM
+  - create_hcvault: Deploy a single instance HashiCorp Vault and have the gateway authenticate using it's own managed identity into it. By default it will get all privileges into the kv/ path
  
 - Other Variables:
   - tagset: tags to apply to all resources
@@ -71,6 +87,7 @@ Within the main module, do the usual steps
 
 ```bash
 cd main
+cp terraform.tfvars.example terraform.tfvars
 terraform init
 terraform plan
 terraform apply
@@ -92,3 +109,6 @@ This means that of cource that you cannot deploy the "Windows target" until the 
 Once deployed, you can expect your resource group to look like the example below
 
 ![StrongDM Permissions](doc/partnertraining.png?raw=true)
+## Issues, comments, feedback
+This repository is maintained with :blue_heart: by [Hamish](https://github.com/HameArm), [Nico](https://github.com/ncorrare) and other members of the [StrongDM](https://github.com/strongdm) team.
+Please send us your issues and PR through the GitHub functionality, and we will get to them as soon as possible.

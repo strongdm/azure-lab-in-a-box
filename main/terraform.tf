@@ -11,6 +11,9 @@ terraform {
     azuread = {
       source = "hashicorp/azuread"
     }
+    env = {
+      source = "tcarreira/env"
+    }
   }
 
   required_version = ">= 1.1.0"
@@ -34,3 +37,7 @@ provider "azuread" {}
 data "azurerm_subscription" "subscription" {}
 
 data "azurerm_client_config" "current" {}
+
+data "env_var" "sdm_api" {
+  id = "SDM_API_HOST"
+}
