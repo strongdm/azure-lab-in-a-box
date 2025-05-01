@@ -173,6 +173,15 @@ $dcSetContent = @'
                 exit
             }
 
+            # Set the right Certificate Enforcement per KBKB5014754
+            try {
+                New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Kdc" -Name "StrongCertificateBindingEnforcement" -PropertyType DWORD -Value 1 -Force 
+                Write-Host "Strong Certificate Enforcement Disabled."
+            } catch {
+                Write-Host "Error: Couldn't set appropiate certificate enforcement. Certificate logins will fail!."
+                exit
+            }
+
 
             # Link the GPO to the domain (or specific OU)
             New-GPLink -Name $GPOName -Target "$Domain" -LinkEnabled Yes -Enforced Yes
