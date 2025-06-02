@@ -1,89 +1,115 @@
 # StrongDM Lab in a Box for Azure
+
 > [!Warning]
 > While we will attempt to keep tagged versions "working", there are a lot of improvements being shipped.
 > Update with caution :)
 
+## Overview
 
-This repository contains a set of modules that enable the user to deploy a quick lab to evaluate StrongDM capabilities, including
-- An optional Resource Group, VPC, Virtual Network, Security groups, NAT and Gateway sets
-- A StrongDM Gateway and a relay with a managed identity allowing them to use Azure Key Vault
-- An SSH Target using StrongDM's CA for Authentication 
-- A PostgreSQL target
-- Azure Read Only access on AZ CLI
-- A Windows domain controller 
-- A Windows server target using certificate authentication 
-- An AKS Cluster 
-- A HashiCorp Vault single instance cluster
+This repository contains a set of modules that enable the user to deploy a quick lab environment to evaluate StrongDM capabilities. The infrastructure is fully automated using Terraform and can be deployed in your Azure subscription in minutes.
 
-All resources are tagged according to variables set in the module, in order to set adequate access roles in StrongDM
+### Included Resources
+
+- **Network Infrastructure**: Resource Group, Virtual Network, subnets, security groups, NAT and Internet Gateway
+- **StrongDM Infrastructure**: Gateway and relay with Azure Key Vault integration using managed identity
+- **Database Targets**:
+  - Azure Database for PostgreSQL with credentials in Azure Key Vault
+  - Microsoft SQL Server with Windows authentication
+- **Windows Resources**:
+  - Windows domain controller
+  - Windows server target with certificate authentication
+- **Linux Resources**: SSH target using StrongDM's CA for authentication
+- **Kubernetes**: AKS Cluster for container workloads
+- **Azure Access**: Read-only access to Azure resources via CLI
+- **HashiCorp Vault**: Single instance development cluster with managed identity authentication
+
+All resources are properly tagged according to variables set in the module, ensuring consistent resource management and appropriate access roles in StrongDM.
+
+## Architecture
+
+The lab environment creates a secure network architecture with:
+- Public subnet for internet-facing components (StrongDM gateway)
+- Private subnets for protected resources (databases, servers)
+- Security groups configured for least-privilege access
+- Proper routing between public and private resources
+- Managed identity integration for secure Azure service authentication
 
 ## Prerequisites
+
 In addition to the usual access credentials for Azure, the modules require an access key to StrongDM with the following privileges:
 
- ![StrongDM Permissions](doc/strongdm-permissions.png?raw=true)
+![StrongDM Permissions](doc/strongdm-permissions.png?raw=true)
 
-Export the environment variables
+You can create the token with the following command:
+
+```bash
+sdm admin tokens add TerraformSecMgmt --permissions secretstore:list,secretstore:create,secretstore:update,secretstore:delete,organization:view_settings,relay:list,relay:create,policy:read,policy:write,datasource:list,datasource:create,datasource:update,datasource:delete,datasource:healthcheck,resourcelock:delete,resourcelock:list,accessrequest:requester,secretengine:create,secretengine:list,secretengine:delete,secretengine:update,managedsecret:list,managedsecret:update,managedsecret:create,managedsecret:read,managedsecret:delete --duration 648000 --type api
+```
+
+Export the environment variables:
 
 ```bash
 export SDM_API_ACCESS_KEY=auth-aaabbbbcccccc
 export SDM_API_SECRET_KEY=jksafhlksdhfsahgghdslkhaslghasdlkghlasdkhglkshg
 ```
-or in Powershell
+or in Powershell:
 ```powershell
 $env:SDM_API_ACCESS_KEY="auth-xxxxxx888x8x88x8x6"
 $env:SDM_API_SECRET_KEY="X4fasfasfasfasfasfsafaaqED34ge5343CkQ"
 ```
 
 > [!NOTE]
-> If your control plane is in the UK, or the EU, make sure that the SDM_HOST_API variable is correctly set.
+> If your control plane is in the UK, or the EU, make sure that the SDM_API_HOST variable is correctly set.
 > Gateways and relays *will* use this variable as well to register against the right tenant
 
 ```bash
 export SDM_API_HOST=api.uk.strongdm.com:443
 ```
-or in Powershell
+or in Powershell:
 ```powershell
 $env:SDM_API_HOST="api.uk.strongdm.com:443"
-```
-
-Make sure you're logged into sdm with a user that has enough privilege to read the CA certifcate for Windows:
-```sdm login
-sdm admin rdp view-ca
 ```
 
 > [!NOTE]
 > The verification of the operating system is done based on the presence of "c:" in the module path. If there is no c:,
 > the module will not assume you're using Windows.
 
-## Variables
-- Network
-  - region: Azure region to deploy the resources to (defaults to ukwest)
-  - rg: Id of an existing Resource group. If it's null a new resource group will be created. 
-  - vn: Id of an existing Virtual Network. If it's null a new vn will be created. If this variable is provided all of the related network variables will be required
-  - gateway_subnet: ID of a Public Subnet
-  - relay_subnet: Private subnet to deploy resources
-The module will not verify if the right network configuration is set so make sure to refer to the SDM [Ports Guide](https://www.strongdm.com/docs/admin/deployment/ports-guide/)
+Make sure you're logged into sdm with:
+```bash
+sdm login
+```
+This is important if you're using the Windows CA target, as it will use the local process to pull the Windows CA Certificate.
 
-- Resources
-  - create_linux_target: Create a linux target resource with ssh ca authentication
-  - create_postgresql: Create a Simple Postgresql database using password authentication, retrieving credentials from Key Vault
-  - create_mssql: Create a Microsoft SQL Server database using password authentication, retrieving credentials from Key Vault
-  - create_aks: Create a Kubernetes Cluster
-  - create_domain_controller: Create a Windows Domain Controller
-  - create_windows_target: Create a Windows RDP target
-  - create_az_ro: Create a service principal to be used to access Azure with read only privileges. Passwords expire every 10 days so you'll need to re-run ```terraform apply``` to update the password in StrongDM
-  - create_hcvault: Deploy a single instance HashiCorp Vault and have the gateway authenticate using it's own managed identity into it. By default it will get all privileges into the kv/ path
- 
-- Other Variables:
-  - tagset: tags to apply to all resources
-  - name: an arbitrary string that will be added to all resource names
+## Configuration Variables
 
+### Network Configuration
+- `region`: Azure region where resources will be deployed (default: ukwest).
+- `rg`: Name of an existing Resource Group. If null, a new Resource Group will be created.
+- `vn`: Name of an existing Virtual Network. If null, a new Virtual Network will be created.
+- `gateway_subnet`: ID of a public subnet for the StrongDM Gateway.
+- `relay_subnet`: Private subnet to deploy resources and targets.
 
-You can reference the [terraform.tfvars.example](main/terraform.tfvars.example) file in the main module for reference
+> The module will not verify if the right network configuration is set, so make sure to refer to the SDM [Ports Guide](https://www.strongdm.com/docs/admin/deployment/ports-guide/)
 
-## Getting started
+### Resource Flags
+- `create_linux_target`: Create a Linux target with SSH CA authentication.
+- `create_postgresql`: Create an Azure Database for PostgreSQL.
+- `create_mssql`: Create a Microsoft SQL Server database.
+- `create_aks`: Create an Azure Kubernetes Service (AKS) cluster.
+- `create_domain_controller`: Create a Windows domain controller.
+- `create_windows_target`: Create a Windows RDP target.
+- `create_az_ro`: Create a service principal for read-only Azure access.
+- `create_hcvault`: Deploy a single instance HashiCorp Vault cluster.
 
-Within the main module, do the usual steps
+### General Configuration
+- `tagset`: Tags to apply to all resources.
+- `name`: An arbitrary string that will be added to all resource names (must be lowercase).
+
+You can reference the [terraform.tfvars.example](main/terraform.tfvars.example) file in the main module for example configurations.
+
+## Getting Started
+
+Within the main module, do the usual steps:
 
 ```bash
 cd main
@@ -93,22 +119,57 @@ terraform plan
 terraform apply
 ``` 
 
-If you're running this in Windows you may have to set your execution policy accordingly as the script will run some local Powershell to retrieve the CA certific
-ate
+If you're running this in Windows, you may have to set your execution policy accordingly as the script will run local PowerShell commands to retrieve the CA certificate:
 
 ```powershell
-set-executionpolicy bypass
+Set-ExecutionPolicy Bypass
 ```
 
-## Windows Target Warnings
-Setting up a Domain controller takes several reboots. This is implemented by a persistent Powershell script that runs at each reboot and has flow control through creating some "flag files" in c:\ with the "done" extension as each step is completed. You can reference the full Powershell script [here](dc/install-dc.ps1.tpl).
+## Windows Target Considerations
 
-This means that of cource that you cannot deploy the "Windows target" until the domain controller is up and running
+Setting up a domain controller takes several reboots. This is implemented by a persistent PowerShell script that runs at each reboot and has flow control through creating some "flag files" in C:\ with the "done" extension as each step is completed. You can reference the full PowerShell script [here](dc/install-dc.ps1.tpl).
+
+Note that you cannot deploy the "Windows target" until the domain controller is up and running.
+
+## Azure-Specific Features
+
+### Managed Identity Integration
+The StrongDM Gateway and Relay are configured with Azure managed identities, allowing secure authentication to Azure Key Vault without storing credentials.
+
+### Service Principal Management
+The Azure Read-Only service principal passwords expire every 10 days for security. You'll need to re-run `terraform apply` to update the password in StrongDM.
+
+### HashiCorp Vault Integration
+When enabled, HashiCorp Vault is configured to authenticate using the gateway's managed identity, providing all privileges to the kv/ path by default.
+
+## Training Scenarios
+
+This lab environment supports various training scenarios:
+
+1. **Database Access Management**: Configure secure access to PostgreSQL and SQL Server databases with Azure Key Vault integration
+2. **Server Access Control**: Manage Windows and Linux server access with certificate authentication and Active Directory integration
+3. **Kubernetes Integration**: Demonstrate AKS cluster access management with kubectl and container workloads
+4. **Cloud Permissions**: Show controlled Azure resources access through service principals and CLI tools
+5. **Secret Management**: Illustrate integration with HashiCorp Vault and Azure Key Vault for enterprise secret management
+6. **Multi-Platform Support**: Demonstrate consistent access patterns across Windows, Linux, and container environments
+
+## Troubleshooting
+
+Common issues and their solutions:
+
+1. **Connection Failures**: Verify security groups allow traffic on required ports
+2. **Authentication Issues**: Check the SDM API credentials and permissions
+3. **Windows Setup Problems**: Examine C:\ for flag files to determine current setup stage
 
 ## Infrastructure Diagram
 Once deployed, you can expect your resource group to look like the example below
 
-![StrongDM Permissions](doc/partnertraining.png?raw=true)
+![Azure Lab Architecture](doc/partnertraining.png?raw=true)
+
+## Contributing
+
+Feel free to submit issues or pull requests to improve the lab environment.
+
 ## Issues, comments, feedback
 This repository is maintained with :blue_heart: by [Hamish](https://github.com/HameArm), [Nico](https://github.com/ncorrare) and other members of the [StrongDM](https://github.com/strongdm) team.
 Please send us your issues and PR through the GitHub functionality, and we will get to them as soon as possible.

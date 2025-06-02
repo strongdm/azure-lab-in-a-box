@@ -1,3 +1,11 @@
+/*
+ * HashiCorp Vault Module
+ * Creates a single-node HashiCorp Vault instance with Azure Key Vault integration
+ * Configured with auto-unseal using Azure Key Vault cryptographic keys
+ * Uses managed identity for authentication to Azure services
+ */
+
+// Network interface for the HashiCorp Vault VM in the private subnet
 resource "azurerm_network_interface" "sdm-vault-nic" {
   name                = "${var.name}-vault-nic"
   location            = var.region
@@ -10,34 +18,41 @@ resource "azurerm_network_interface" "sdm-vault-nic" {
   }
 }
 
+// Generate SSH key pair for Vault VM access
 resource "tls_private_key" "vault" {
     algorithm = "RSA"
     rsa_bits  = 2048
 }
 
+// Grant the Vault VM's managed identity "Key Vault Crypto User" role
+// Allows Vault to use Azure Key Vault for auto-unseal operations
 resource "azurerm_role_assignment" "hcvault" {
   principal_id   = azurerm_linux_virtual_machine.vault.identity[0].principal_id
-  role_definition_name = "Key Vault Crypto User"  # This allows the Managed Identity to read secrets
+  role_definition_name = "Key Vault Crypto User"  // This allows the Managed Identity to read secrets
   scope           = var.akvid
 }
 
+// Data sources for current Azure subscription and client configuration
 data "azurerm_subscription" "this" {}
 
 data "azurerm_client_config" "this" {}
 
+// Grant the Vault VM's managed identity "Reader" role on the resource group
+// Allows Vault to authenticate with Azure and access resources
 resource "azurerm_role_assignment" "azureauth" {
   principal_id   = azurerm_linux_virtual_machine.vault.identity[0].principal_id
   scope          = var.rgid
-  role_definition_name = "Reader"  # Built-in Read-only role
-  #scope           = "${data.azurerm_subscription.this.name}/resourceGroups/${var.rg}"
+  role_definition_name = "Reader"  // Built-in Read-only role
 }
 
+// Create an encryption key in Azure Key Vault for Vault auto-unseal
 resource "azurerm_key_vault_key" "hcvault" {
   name         = "${var.name}-hcvault-sealkey"
   key_vault_id = var.akvid
   key_type     = "RSA"
   key_size     = 2048
 
+  // Key operations allowed for this key
   key_opts = [
     "decrypt",
     "encrypt",
@@ -47,6 +62,7 @@ resource "azurerm_key_vault_key" "hcvault" {
     "wrapKey",
   ]
 
+  // Key rotation policy
   rotation_policy {
     automatic {
       time_before_expiry = "P30D"
