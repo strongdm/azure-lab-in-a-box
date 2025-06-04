@@ -1,3 +1,11 @@
+/*
+ * StrongDM Relay Configuration
+ * Sets up a relay server in the private subnet that enables secure access to resources
+ * Uses a system-assigned managed identity for authentication to Azure services
+ * Automatically registers with the StrongDM control plane during provisioning
+ */
+
+// Network interface for the StrongDM relay in the private subnet
 resource "azurerm_network_interface" "sdm-relay-nic" {
   name                = "${var.name}-sdmrelay-nic"
   location            = var.region
@@ -12,15 +20,16 @@ resource "azurerm_network_interface" "sdm-relay-nic" {
             network = "Private"
             class   = "sdminfra"
         })
-
 }
 
+// StrongDM Relay node definition that registers with the StrongDM control plane
 resource "sdm_node" "relay" {
     relay {
         name = "sdm-lab-relay"
     }
 }
 
+// SSH access resource for the Relay VM itself (for administrative purposes)
 resource "sdm_resource" "ssh-relay" {
     ssh {
         name     = "${var.name}-sdm-relay"
@@ -32,33 +41,33 @@ resource "sdm_resource" "ssh-relay" {
             class   = "sdminfra"
         })
     }
-
-    
 }
 
-
+// Linux VM that will run the StrongDM relay service
 resource "azurerm_linux_virtual_machine" "sdmrelay" {
   name                  = "${var.name}-sdmr01"
   resource_group_name   = coalesce(var.rg,one(module.rg[*].rgname))
   location              = var.region
   size                  = "Standard_B1s"  # Minimal VM size
   network_interface_ids = [azurerm_network_interface.sdm-relay-nic.id]
+  
+  // Custom data script that installs and configures the StrongDM relay
+  // Also configures HashiCorp Vault integration if enabled
   user_data             = base64encode(templatefile("${path.module}/gw-provision.tpl", {
     sdm_relay_token    = sdm_node.relay.relay[0].token
     target_user        = "azureuser"
     vault_ip           = var.create_hcvault == false ? "" : one(module.hcvault[*].ip)
     sdm_domain         = data.env_var.sdm_api.value == "" ? "" : coalesce(join(".", slice(split(".", element(split(":", data.env_var.sdm_api.value), 0)), 1, length(split(".", element(split(":", data.env_var.sdm_api.value), 0))))),"")
-    }
-   )
-  )
-    # Use SSH Key-based Authentication (recommended for security)
+    }))
+  
+  // Use SSH Key-based Authentication (recommended for security)
   admin_username        = "azureuser"
   admin_ssh_key {
     username   = "azureuser"
     public_key = sdm_resource.ssh-relay.ssh[0].public_key
   }
 
-  # Define the OS image (Ubuntu 20.04 LTS in this example)
+  // Define the OS image (Ubuntu 20.04 LTS in this example)
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
@@ -75,10 +84,9 @@ resource "azurerm_linux_virtual_machine" "sdmrelay" {
     type = "SystemAssigned"
   }
   
-  # Custom VM Tags
+  // Custom VM Tags
   tags = merge (var.tagset, {
             network = "Private"
             class   = "sdminfra"
         })
-
 }
