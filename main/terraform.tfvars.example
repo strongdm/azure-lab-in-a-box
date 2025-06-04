@@ -14,3 +14,6 @@ create_windows_target = false
 create_aks = false
 
 create_az_ro = true
+
+#Onboard domain users to be managed by StrongDM
+#create_managedsecrets = true

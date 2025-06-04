@@ -30,6 +30,8 @@ resource "sdm_resource" "ssh-relay" {
         tags = merge (var.tagset, {
             network = "Private"
             class   = "sdminfra"
+            "eng__${var.name}AD" = true
+
         })
     }
 

@@ -9,14 +9,6 @@ resource "azurerm_network_interface" "sdm-dc-nic" {
     private_ip_address_allocation = "Dynamic"
   }
 }
-#TODO: Port to powershell in case this is running on Windows
-#data "external" "rdpcertificate" {
-#    program = ["bash", "${path.module}/windowsrdpca.sh"]
-#}
-
-data "external" "rdpcertificate" {
-    program = [local.interpreter, local.script]
-}
 
 
 resource "azurerm_windows_virtual_machine" "windowsdc" {
@@ -45,8 +37,10 @@ resource "azurerm_windows_virtual_machine" "windowsdc" {
   custom_data = base64encode(templatefile("${path.module}/install-dc.ps1.tpl", {
     name     = var.name
     password = local.admin_password
-    rdpca    = data.external.rdpcertificate.result.certificate
-    target_user = var.target_user
+    rdpca    = var.rdpca
+    
+    target_user  = var.target_user
+    domain_users = var.domain_users
 
     } ))
   tags = local.thistagset
