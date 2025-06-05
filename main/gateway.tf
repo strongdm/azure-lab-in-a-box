@@ -1,3 +1,10 @@
+/*
+ * StrongDM Gateway resources
+ * This file defines resources for the StrongDM gateway which serves as the connection point for 
+ * clients accessing resources in the lab environment.
+ */
+
+// Public IP for the StrongDM Gateway to allow inbound connections from clients
 resource "azurerm_public_ip" "sdm-gw-ip" {
   name                = "${var.name}-sdmgw-public-ip"
   location            = var.region
@@ -7,7 +14,7 @@ resource "azurerm_public_ip" "sdm-gw-ip" {
   domain_name_label   = "${var.name}sdmgw"
 }
 
-
+// Network interface for the StrongDM Gateway with public IP attached
 resource "azurerm_network_interface" "sdm-gw-nic" {
   name                = "${var.name}-sdmgw-nic"
   location            = var.region
@@ -25,6 +32,7 @@ resource "azurerm_network_interface" "sdm-gw-nic" {
     })
 }
 
+// StrongDM Gateway node definition that registers with the StrongDM control plane
 resource "sdm_node" "gateway" {
     gateway {
         name = "sdm-${var.name}-lab-gw"
@@ -37,6 +45,7 @@ resource "sdm_node" "gateway" {
     }
 }
 
+// SSH access resource for the Gateway VM itself (for administrative purposes)
 resource "sdm_resource" "ssh-gateway" {
     ssh {
         name     = "${var.name}-sdm-gateway"

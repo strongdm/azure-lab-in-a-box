@@ -1,3 +1,13 @@
+/*
+ * Network module - Creates the foundation network resources for the StrongDM lab
+ * This file creates:
+ * - A virtual network
+ * - Public subnet for gateway components
+ * - Private subnet for relay components
+ * - NAT Gateway with public IP for private subnet outbound connectivity
+ */
+
+// Virtual Network for the StrongDM lab environment
 resource "azurerm_virtual_network" "vn" {
   name                = "${var.name}-vn"
   location            = var.region
@@ -7,6 +17,7 @@ resource "azurerm_virtual_network" "vn" {
   tags = local.thistagset
 }
 
+// Public subnet used for StrongDM gateway components
 resource "azurerm_subnet" "gateway" {
   resource_group_name  = var.rg
   address_prefixes     = ["10.0.1.0/24"]
@@ -15,6 +26,7 @@ resource "azurerm_subnet" "gateway" {
 
 }
 
+// Private subnet used for StrongDM relay and target components
 resource "azurerm_subnet" "relay" {
   resource_group_name  = var.rg
   address_prefixes     = ["10.0.2.0/24"]
@@ -22,6 +34,7 @@ resource "azurerm_subnet" "relay" {
   virtual_network_name = azurerm_virtual_network.vn.name
 }
 
+// Public IP for NAT Gateway to allow outbound connectivity from private subnet
 resource "azurerm_public_ip" "nat" {
   name                = "${var.name}-Nat-PIP"
   location            = var.region
@@ -34,6 +47,7 @@ resource "azurerm_public_ip" "nat" {
   })
 }
 
+// NAT Gateway to provide outbound internet connectivity for resources in private subnet
 resource "azurerm_nat_gateway" "natgw" {
   name                = "${var.name}-NatGateway"
   location            = var.region
@@ -45,6 +59,7 @@ resource "azurerm_nat_gateway" "natgw" {
   })
 }
 
+// Association between NAT Gateway and its Public IP
 resource "azurerm_nat_gateway_public_ip_association" "natassoc" {
   nat_gateway_id       = azurerm_nat_gateway.natgw.id
   public_ip_address_id = azurerm_public_ip.nat.id

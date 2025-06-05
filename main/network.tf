@@ -1,3 +1,10 @@
+/*
+ * Network Configuration - Main Module
+ * Conditionally creates a new network environment for the StrongDM lab
+ * Only creates network resources if var.vn is not provided
+ */
+
+// Create network resources if var.vn is null (not specified)
 module "network" {
   count  = var.vn == null ? 1 : 0
   source = "../network"
