@@ -13,8 +13,9 @@ module "secretsmgmt" {
 
 resource "sdm_secret_engine" "ad" {
   count     = (try(var.domain_users) == false && var.create_managedsecrets == false && var.create_domain_controller == false) ? 0 : 1
+  depends_on             = [sdm_node.relay]
   active_directory {
-    binddn                 = "CN=Domain Admin,CN=Users,DC=${var.name},DC=local"
+    binddn                 = "CN=${one(module.dc[*].domain_admin)},CN=Users,DC=${var.name},DC=local"
     bindpass               = one(module.dc[*].domain_password)
     insecure_tls           = true
     name                   = "${var.name}AD"

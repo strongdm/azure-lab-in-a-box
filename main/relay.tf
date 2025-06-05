@@ -18,6 +18,7 @@ resource "azurerm_network_interface" "sdm-relay-nic" {
 resource "sdm_node" "relay" {
     relay {
         name = "sdm-lab-relay"
+        tags = {"eng__${var.name}AD" = true}
     }
 }
 
