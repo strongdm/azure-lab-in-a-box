@@ -20,7 +20,7 @@ resource "sdm_secret_engine" "ad" {
     name                   = "${var.name}AD"
     secret_store_id        = resource.sdm_secret_store.akv.id
     secret_store_root_path = "${var.name}AD"
-    url                    = "ldaps://${one(module.dc[*].dc_fqdn)}/"
+    url                    = "ldaps://${one(module.dc[*].dc_ip)}/"
     max_backoff_duration   = "24h0m0s" 
   }
 }
