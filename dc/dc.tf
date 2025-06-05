@@ -17,13 +17,6 @@ resource "azurerm_network_interface" "sdm-dc-nic" {
     private_ip_address_allocation = "Dynamic"
   }
 }
-
-// Retrieve StrongDM RDP CA certificate for certificate-based authentication
-// Uses platform-appropriate script (PowerShell or Bash) to get the certificate
-data "external" "rdpcertificate" {
-    program = [local.interpreter, local.script]
-}
-
 // Windows Server VM that will be the domain controller
 resource "azurerm_windows_virtual_machine" "windowsdc" {
   name                = "${var.name}-dc1"
@@ -56,8 +49,11 @@ resource "azurerm_windows_virtual_machine" "windowsdc" {
   custom_data = base64encode(templatefile("${path.module}/install-dc.ps1.tpl", {
     name     = var.name
     password = local.admin_password
-    rdpca    = data.external.rdpcertificate.result.certificate
-    target_user = var.target_user
+    rdpca    = var.rdpca
+    
+    target_user  = var.target_user
+    domain_users = var.domain_users
+
     } ))
   tags = local.thistagset
 }

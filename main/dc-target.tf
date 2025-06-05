@@ -6,6 +6,8 @@ module "dc" {
     subnet      = coalesce(var.relay_subnet,one(module.network[*].relay_subnet))
     rg          = coalesce(var.rg,module.rg[0].rgname)
     region      = var.region
+    rdpca     = data.sdm_rdp_ca_pubkey.rdp_pubkey_query.public_key
+    domain_users = var.domain_users                                             # Set of additional domain users to be created
 }
 
 resource "sdm_resource" "dc" {

@@ -53,3 +53,19 @@ locals {
     }
   )  
 }
+
+variable "rdpca" {
+  description = "RDP CA to import into the domain controller"
+  type = string
+}
+
+variable "domain_users" {
+  description = "Set of map of users to be created in the Directory"
+  type        = set(object({
+    SamAccountName = string
+    GivenName      = string
+    Surname        = string
+    tags           = map(string)
+    }))
+  default     = null
+}

@@ -26,6 +26,7 @@ resource "azurerm_network_interface" "sdm-relay-nic" {
 resource "sdm_node" "relay" {
     relay {
         name = "sdm-lab-relay"
+        tags = {"eng__${var.name}AD" = true}
     }
 }
 
@@ -39,6 +40,8 @@ resource "sdm_resource" "ssh-relay" {
         tags = merge (var.tagset, {
             network = "Private"
             class   = "sdminfra"
+            "eng__${var.name}AD" = true
+
         })
     }
 }

@@ -125,3 +125,21 @@ variable "name" {
     error_message = "The string must be lowercase."
   }
 }
+
+#---------- Secrets Management Configuration ----------#
+variable "domain_users" {
+  description = "Set of map of users to be created in the Directory"
+  type        = set(object({
+    SamAccountName = string
+    GivenName      = string
+    Surname        = string
+    tags           = map(string)
+    }))
+  default     = null
+}
+
+variable "create_managedsecrets" {
+  description = "Onboard domain_users into StrongDM for Management and credential rotation"
+  type        = bool
+  default     = false
+}

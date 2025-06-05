@@ -27,7 +27,7 @@ resource "azurerm_key_vault" "sdm" {
 // Grant the StrongDM relay's managed identity access to read secrets
 resource "azurerm_role_assignment" "sdmrelay" {
   principal_id   = azurerm_linux_virtual_machine.sdmrelay.identity[0].principal_id
-  role_definition_name = "Key Vault Secrets User"  // Allows the Managed Identity to read secrets
+  role_definition_name = "Key Vault Secrets Officer"  # This allows the Managed Identity to read/write secrets
   scope           = azurerm_key_vault.sdm.id
 }
 
