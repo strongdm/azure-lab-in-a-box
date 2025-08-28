@@ -9,18 +9,18 @@ variable "tagset" {
 }
 
 variable "subscription" {
-    description = "Azure subscription in which to provision the service account"
+  description = "Azure subscription in which to provision the service account"
 }
 
 locals {
-  thistagset = merge (var.tagset, {
+  thistagset = merge(var.tagset, {
     network = "Public"
     class   = "target"
     }
-  )  
+  )
 }
 
 variable "rg" {
-    description = "Resource Group for the readonly principal"
-    type        = string
+  description = "Resource Group for the readonly principal"
+  type        = string
 }

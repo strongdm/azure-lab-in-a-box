@@ -13,23 +13,23 @@
 
 // Azure region to deploy all resources
 variable "region" {
-    description = "Azure Region to create resources on"
-    type        = string
-    default     =  "ukwest"
+  description = "Azure Region to create resources on"
+  type        = string
+  default     = "ukwest"
 }
 
 // Existing resource group name (optional)
 variable "rg" {
-    description = "Name of existing resource group to provision resources on"
-    type        = string
-    default     = null
+  description = "Name of existing resource group to provision resources on"
+  type        = string
+  default     = null
 }
 
 // Existing virtual network name (optional)
 variable "vn" {
-    description = "Name of existing Virtual Network to provision resources on"
-    type        = string
-    default     = null
+  description = "Name of existing Virtual Network to provision resources on"
+  type        = string
+  default     = null
 }
 
 // Existing public subnet for gateway components (optional)
@@ -129,13 +129,13 @@ variable "name" {
 #---------- Secrets Management Configuration ----------#
 variable "domain_users" {
   description = "Set of map of users to be created in the Directory"
-  type        = set(object({
+  type = set(object({
     SamAccountName = string
     GivenName      = string
     Surname        = string
     tags           = map(string)
-    }))
-  default     = null
+  }))
+  default = null
 }
 
 variable "create_managedsecrets" {

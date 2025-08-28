@@ -42,7 +42,7 @@ resource "azurerm_public_ip" "nat" {
   allocation_method   = "Static"
   sku                 = "Standard"
 
-  tags = merge (local.thistagset, {
+  tags = merge(local.thistagset, {
     network = "Public"
   })
 }
@@ -54,7 +54,7 @@ resource "azurerm_nat_gateway" "natgw" {
   resource_group_name = var.rg
   sku_name            = "Standard"
 
-  tags = merge (local.thistagset, {
+  tags = merge(local.thistagset, {
     network = "Public"
   })
 }
@@ -91,7 +91,7 @@ resource "azurerm_network_security_group" "relay" {
     destination_address_prefix = "Internet"
   }
 
-  tags = merge (local.thistagset, {
+  tags = merge(local.thistagset, {
     network = "Private"
   })
 }
@@ -111,7 +111,7 @@ resource "azurerm_network_security_group" "gateway" {
     source_address_prefix      = "Internet"
     destination_address_prefix = "VirtualNetwork"
   }
-#SSH Access for troubleshooting
+  #SSH Access for troubleshooting
   security_rule {
     name                       = "Allow-Accessing-SSH"
     priority                   = 101
@@ -135,7 +135,7 @@ resource "azurerm_network_security_group" "gateway" {
     destination_address_prefix = "Internet"
   }
 
-  tags = merge (local.thistagset, {
+  tags = merge(local.thistagset, {
     network = "Public"
   })
 }

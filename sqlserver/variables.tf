@@ -27,27 +27,27 @@ variable "target_user" {
 }
 
 variable "region" {
-    description = "Azure Region to create resources on"
-    type        = string
-    default     =  "ukwest"
+  description = "Azure Region to create resources on"
+  type        = string
+  default     = "ukwest"
 }
 
 variable "rg" {
-    description = "Name of existing resource group to provision resources on"
-    type        = string
-    default     = null
+  description = "Name of existing resource group to provision resources on"
+  type        = string
+  default     = null
 }
 
 variable "relay_ip" {
-    description = "Relay IP to be allowed access"
-    type        = string
-    default     = null
+  description = "Relay IP to be allowed access"
+  type        = string
+  default     = null
 }
 
 variable "key_vault_id" {
-    description = "ID of the Key Vault where to store secrets"
-    type        = string
-    default     = null
+  description = "ID of the Key Vault where to store secrets"
+  type        = string
+  default     = null
 }
 
 resource "random_password" "admin_password" {
@@ -61,10 +61,10 @@ resource "random_password" "admin_password" {
 
 locals {
   admin_password = random_password.admin_password.result
-  thistagset = merge (var.tagset, {
+  thistagset = merge(var.tagset, {
     network = "Private"
     class   = "target"
     Name    = "sdm-${var.name}-sqlserver"
     }
-  )  
+  )
 }

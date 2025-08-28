@@ -8,7 +8,7 @@ resource "azurerm_mssql_server" "server" {
   administrator_login          = var.target_user
   administrator_login_password = local.admin_password
   version                      = "12.0"
-  tags = local.thistagset
+  tags                         = local.thistagset
 
 }
 
@@ -28,7 +28,7 @@ resource "azurerm_key_vault_secret" "sql-username" {
   name         = "${var.name}-sql-username"
   value        = var.target_user
   key_vault_id = var.key_vault_id
-  tags = local.thistagset
+  tags         = local.thistagset
 
 }
 
@@ -36,6 +36,6 @@ resource "azurerm_key_vault_secret" "sql-password" {
   name         = "${var.name}-sql-password"
   value        = local.admin_password
   key_vault_id = var.key_vault_id
-  tags = local.thistagset
+  tags         = local.thistagset
 
 }

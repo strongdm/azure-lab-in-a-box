@@ -26,20 +26,20 @@ variable "target_user" {
 }
 
 variable "region" {
-    description = "Azure Region to create resources on"
-    type        = string
-    default     =  "ukwest"
+  description = "Azure Region to create resources on"
+  type        = string
+  default     = "ukwest"
 }
 
 variable "rg" {
-    description = "Resource Group for the readonly principal"
-    type        = string
+  description = "Resource Group for the readonly principal"
+  type        = string
 }
 
 locals {
-  thistagset = merge (var.tagset, {
+  thistagset = merge(var.tagset, {
     network = "Public"
     class   = "target"
     }
-  )  
+  )
 }

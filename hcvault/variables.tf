@@ -20,8 +20,8 @@ variable "akvdns" {
 }
 
 variable "akvid" {
-    description = "ID of the Azure Key Vault"
-    type        = string
+  description = "ID of the Azure Key Vault"
+  type        = string
 }
 
 variable "name" {
@@ -36,27 +36,27 @@ variable "target_user" {
 }
 
 variable "region" {
-    description = "Azure Region to create resources on"
-    type        = string
-    default     =  "ukwest"
+  description = "Azure Region to create resources on"
+  type        = string
+  default     = "ukwest"
 }
 
 variable "rg" {
-    description = "Name of existing resource group to provision resources on"
-    type        = string
-    default     = null
+  description = "Name of existing resource group to provision resources on"
+  type        = string
+  default     = null
 }
 
 variable "rgid" {
-    description = "ID of existing resource group to provision resources on"
-    type        = string
-    default     = null
+  description = "ID of existing resource group to provision resources on"
+  type        = string
+  default     = null
 }
 
 variable "vault_version" {
-    description = "Version of HashiCorp Vault to download"
-    type        = string
-    default     = "1.18.4"
+  description = "Version of HashiCorp Vault to download"
+  type        = string
+  default     = "1.18.4"
 }
 
 resource "random_password" "admin_password" {
@@ -70,10 +70,10 @@ resource "random_password" "admin_password" {
 
 locals {
   admin_password = random_password.admin_password.result
-  thistagset = merge (var.tagset, {
+  thistagset = merge(var.tagset, {
     network = "Private"
     class   = "sdminfra"
     Name    = "sdm-${var.name}-hashicorp-vault"
     }
-  )  
+  )
 }

@@ -1,7 +1,7 @@
 output "fqdn" {
-    value = azurerm_postgresql_flexible_server.server.fqdn
+  value = azurerm_postgresql_flexible_server.server.fqdn
 }
 
 output "thistagset" {
-    value = local.thistagset
+  value = local.thistagset
 }

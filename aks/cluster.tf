@@ -24,10 +24,10 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   // Configure the default node pool with standard VMs
   default_node_pool {
     name       = "agentpool"
-    vm_size    = "Standard_D2_v2"
+    vm_size    = "Standard_D2_v3"
     node_count = 2
   }
-  
+
   // Configure SSH access to the Linux nodes
   linux_profile {
     admin_username = var.target_user
@@ -36,13 +36,13 @@ resource "azurerm_kubernetes_cluster" "k8s" {
       key_data = tls_private_key.key.public_key_openssh
     }
   }
-  
+
   // Configure networking with kubenet plugin and standard load balancer
   network_profile {
     network_plugin    = "kubenet"
     load_balancer_sku = "standard"
   }
-  
+
   tags = local.thistagset
 }
 
@@ -56,7 +56,7 @@ resource "azurerm_key_vault_secret" "ssh-key" {
   name         = "${var.name}-aks-ssh"
   value        = tls_private_key.key.private_key_openssh
   key_vault_id = var.key_vault_id
-  tags = local.thistagset
+  tags         = local.thistagset
 }
 
 // Store cluster CA certificate in Azure Key Vault
@@ -64,7 +64,7 @@ resource "azurerm_key_vault_secret" "ca-cert" {
   name         = "${var.name}-aks-ca"
   value        = base64decode(azurerm_kubernetes_cluster.k8s.kube_config[0].cluster_ca_certificate)
   key_vault_id = var.key_vault_id
-  tags = local.thistagset
+  tags         = local.thistagset
 }
 
 // Store client key in Azure Key Vault
@@ -72,7 +72,7 @@ resource "azurerm_key_vault_secret" "client-key" {
   name         = "${var.name}-aks-client-key"
   value        = base64decode(azurerm_kubernetes_cluster.k8s.kube_config[0].client_key)
   key_vault_id = var.key_vault_id
-  tags = local.thistagset
+  tags         = local.thistagset
 }
 
 // Store client certificate in Azure Key Vault
@@ -80,5 +80,5 @@ resource "azurerm_key_vault_secret" "client-cert" {
   name         = "${var.name}-aks-client-cert"
   value        = base64decode(azurerm_kubernetes_cluster.k8s.kube_config[0].client_certificate)
   key_vault_id = var.key_vault_id
-  tags = local.thistagset
+  tags         = local.thistagset
 }

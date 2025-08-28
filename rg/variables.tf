@@ -1,7 +1,7 @@
 variable "region" {
-    description = "Azure Region to create resources on"
-    type        = string
-    default     =  "ukwest"
+  description = "Azure Region to create resources on"
+  type        = string
+  default     = "ukwest"
 }
 
 variable "name" {
@@ -15,8 +15,8 @@ variable "tagset" {
 }
 
 locals {
-  thistagset = merge (var.tagset, {
-    class   = "sdminfra"
+  thistagset = merge(var.tagset, {
+    class = "sdminfra"
     }
   )
 }

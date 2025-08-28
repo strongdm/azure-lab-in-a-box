@@ -1,19 +1,19 @@
 output "relay_subnet" {
-    value = azurerm_subnet.relay.id
+  value = azurerm_subnet.relay.id
 }
 
 output "gateway_subnet" {
-    value = azurerm_subnet.gateway.id
+  value = azurerm_subnet.gateway.id
 }
 
 output "vnid" {
-    value = azurerm_virtual_network.vn.id
+  value = azurerm_virtual_network.vn.id
 }
 
 output "vnname" {
-    value = azurerm_virtual_network.vn.name
+  value = azurerm_virtual_network.vn.name
 }
 
 output "natip" {
-    value = azurerm_public_ip.nat.ip_address
+  value = azurerm_public_ip.nat.ip_address
 }

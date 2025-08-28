@@ -43,30 +43,30 @@ resource "azurerm_windows_virtual_machine" "windowsdc" {
     sku       = "2019-Datacenter"
     version   = "latest"
   }
-  
+
   // Custom script to configure Windows as a domain controller
   // and to install StrongDM RDP CA certificate for authentication
   custom_data = base64encode(templatefile("${path.module}/install-dc.ps1.tpl", {
     name     = var.name
     password = local.admin_password
     rdpca    = var.rdpca
-    
+
     target_user  = var.target_user
     domain_users = var.domain_users
 
-    } ))
+  }))
   tags = local.thistagset
 }
 
 resource "azurerm_virtual_machine_extension" "dc1-vm-extension" {
-  depends_on=[azurerm_windows_virtual_machine.windowsdc]
+  depends_on = [azurerm_windows_virtual_machine.windowsdc]
 
   name                 = "${var.name}-dc1-prov"
   virtual_machine_id   = azurerm_windows_virtual_machine.windowsdc.id
   publisher            = "Microsoft.Compute"
   type                 = "CustomScriptExtension"
   type_handler_version = "1.9"
-  settings = <<SETTINGS
+  settings             = <<SETTINGS
   {
     "commandToExecute": "copy c:\\AzureData\\CustomData.bin c:\\CustomData.ps1 && powershell -ExecutionPolicy Unrestricted -File c:\\CustomData.ps1"
   }

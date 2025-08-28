@@ -21,15 +21,15 @@ variable "target_user" {
 }
 
 variable "region" {
-    description = "Azure Region to create resources on"
-    type        = string
-    default     =  "ukwest"
+  description = "Azure Region to create resources on"
+  type        = string
+  default     = "ukwest"
 }
 
 variable "rg" {
-    description = "Name of existing resource group to provision resources on"
-    type        = string
-    default     = null
+  description = "Name of existing resource group to provision resources on"
+  type        = string
+  default     = null
 }
 
 resource "random_password" "admin_password" {
@@ -43,29 +43,29 @@ resource "random_password" "admin_password" {
 
 locals {
   admin_password = random_password.admin_password.result
-  is_linux = length(regexall("c:", lower(abspath(path.root)))) > 0
-  interpreter = local.is_linux ? "powershell" : "bash"
-  script      = format("%s/%s",path.module,local.is_linux ? "windowsrdpca.ps1" : "windowsrdpca.sh")
-  thistagset = merge (var.tagset, {
+  is_linux       = length(regexall("c:", lower(abspath(path.root)))) > 0
+  interpreter    = local.is_linux ? "powershell" : "bash"
+  script         = format("%s/%s", path.module, local.is_linux ? "windowsrdpca.ps1" : "windowsrdpca.sh")
+  thistagset = merge(var.tagset, {
     network = "Private"
     class   = "sdminfra"
     Name    = "sdm-${var.name}-domain-controller"
     }
-  )  
+  )
 }
 
 variable "rdpca" {
   description = "RDP CA to import into the domain controller"
-  type = string
+  type        = string
 }
 
 variable "domain_users" {
   description = "Set of map of users to be created in the Directory"
-  type        = set(object({
+  type = set(object({
     SamAccountName = string
     GivenName      = string
     Surname        = string
     tags           = map(string)
-    }))
-  default     = null
+  }))
+  default = null
 }

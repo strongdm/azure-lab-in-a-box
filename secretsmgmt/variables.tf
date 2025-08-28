@@ -10,7 +10,7 @@ variable "se_id" {
 
 variable "tags" {
   description = "Tags to be added to the managed secret"
-  type        = map
+  type        = map(any)
 }
 
 variable "user_dn" {

@@ -15,28 +15,28 @@ variable "target_user" {
 }
 
 variable "region" {
-    description = "Azure Region to create resources on"
-    type        = string
-    default     =  "ukwest"
+  description = "Azure Region to create resources on"
+  type        = string
+  default     = "ukwest"
 }
 
 variable "rg" {
-    description = "Name of existing resource group to provision resources on"
-    type        = string
-    default     = null
+  description = "Name of existing resource group to provision resources on"
+  type        = string
+  default     = null
 }
 
 variable "key_vault_id" {
-    description = "ID of the Key Vault where to store secrets"
-    type        = string
-    default     = null
+  description = "ID of the Key Vault where to store secrets"
+  type        = string
+  default     = null
 }
 
 locals {
-  thistagset = merge (var.tagset, {
+  thistagset = merge(var.tagset, {
     network = "Private"
     class   = "target"
     Name    = "sdm-${var.name}-aks"
     }
-  )  
+  )
 }

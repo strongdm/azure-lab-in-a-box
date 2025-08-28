@@ -11,9 +11,9 @@ variable "rg" {
 }
 
 variable "region" {
-    description = "Azure Region to create resources on"
-    type        = string
-    default     =  "ukwest"
+  description = "Azure Region to create resources on"
+  type        = string
+  default     = "ukwest"
 }
 
 variable "tagset" {
@@ -67,10 +67,10 @@ resource "random_password" "admin_password" {
 
 locals {
   admin_password = random_password.admin_password.result
-  thistagset = merge (var.tagset, {
+  thistagset = merge(var.tagset, {
     network = "Private"
     class   = "target"
     Name    = "sdm-${var.name}-windows"
     }
-  )  
+  )
 }
