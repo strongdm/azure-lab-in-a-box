@@ -9,14 +9,14 @@ module "postgresql" {
   source = "../postgresql"
   count  = var.create_postgresql == false ? 0 : 1
 
-  tagset   = var.tagset
-  name     = var.name
-  relay_ip = one(module.network[*].natip) // Allow access from the NAT gateway IP
-  region   = var.region
-  subnet   = coalesce(var.relay_subnet, one(module.network[*].relay_subnet))
-  rg       = coalesce(var.rg, module.rg[0].rgname)
-
+  tagset       = var.tagset
+  name         = var.name
+  relay_ip     = one(module.network[*].natip) // Allow access from the NAT gateway IP
+  region       = var.region
+  subnet       = coalesce(var.relay_subnet, one(module.network[*].relay_subnet))
+  rg           = coalesce(var.rg, module.rg[0].rgname)
   key_vault_id = azurerm_key_vault.sdm.id
+  db_sku       = var.postgresql_sku
 }
 
 // Register the PostgreSQL server as a resource in StrongDM

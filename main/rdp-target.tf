@@ -12,7 +12,7 @@ module "windowstarget" {
 
   domain_admin = (one(module.dc[*].domain_admin))
   domain_name  = (one(module.dc[*].netbios_domain))
-
+  vm_size      = var.vm_sizes.windows_target
 
 }
 

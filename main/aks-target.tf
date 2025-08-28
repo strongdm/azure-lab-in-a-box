@@ -9,12 +9,12 @@ module "aks" {
   source = "../aks"
   count  = var.create_aks == false ? 0 : 1
 
-  tagset = var.tagset
-  name   = var.name
-  region = var.region
-  rg     = coalesce(var.rg, module.rg[0].rgname)
-
+  tagset       = var.tagset
+  name         = var.name
+  region       = var.region
+  rg           = coalesce(var.rg, module.rg[0].rgname)
   key_vault_id = azurerm_key_vault.sdm.id
+  node_vm_size = var.aks_node_size
 }
 
 // Register the AKS cluster as a resource in StrongDM

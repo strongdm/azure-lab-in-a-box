@@ -59,6 +59,12 @@ variable "vault_version" {
   default     = "1.18.4"
 }
 
+variable "vm_size" {
+  description = "Azure VM size for the HashiCorp Vault instance"
+  type        = string
+  default     = "Standard_B1s"
+}
+
 resource "random_password" "admin_password" {
   length      = 20
   special     = true

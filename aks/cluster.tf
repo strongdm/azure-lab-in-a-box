@@ -24,7 +24,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   // Configure the default node pool with standard VMs
   default_node_pool {
     name       = "agentpool"
-    vm_size    = "Standard_D2_v3"
+    vm_size    = var.node_vm_size
     node_count = 2
   }
 

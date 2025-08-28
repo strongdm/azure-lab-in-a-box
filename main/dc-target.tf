@@ -8,6 +8,7 @@ module "dc" {
   region       = var.region
   rdpca        = data.sdm_rdp_ca_pubkey.rdp_pubkey_query.public_key
   domain_users = var.domain_users # Set of additional domain users to be created
+  vm_size      = var.vm_sizes.domain_controller
 }
 
 resource "sdm_resource" "dc" {

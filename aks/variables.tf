@@ -32,6 +32,12 @@ variable "key_vault_id" {
   default     = null
 }
 
+variable "node_vm_size" {
+  description = "VM size for AKS node pool"
+  type        = string
+  default     = "Standard_D2_v3"
+}
+
 locals {
   thistagset = merge(var.tagset, {
     network = "Private"

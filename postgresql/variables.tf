@@ -44,6 +44,12 @@ variable "key_vault_id" {
   default     = null
 }
 
+variable "db_sku" {
+  description = "PostgreSQL database SKU"
+  type        = string
+  default     = "B_Standard_B2s"
+}
+
 resource "random_password" "admin_password" {
   length      = 20
   special     = true

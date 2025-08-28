@@ -29,7 +29,7 @@ resource "azurerm_linux_virtual_machine" "sshcatarget" {
   name                  = "${var.name}-ssh-ca-target"
   resource_group_name   = var.rg
   location              = var.region
-  size                  = "Standard_B1s" # Minimal VM size
+  size                  = var.vm_size
   network_interface_ids = [azurerm_network_interface.sdm-sshca-nic.id]
 
   // Custom data script that installs the StrongDM SSH CA public key

@@ -1,15 +1,16 @@
 #TODO: Fix RGID for pre-existing RG
 module "hcvault" {
-  source = "../hcvault"
-  count  = var.create_hcvault == false ? 0 : 1
-  rg     = coalesce(var.rg, one(module.rg[*].rgname))
-  sshca  = data.sdm_ssh_ca_pubkey.ssh_pubkey_query.public_key
-  tagset = var.tagset
-  name   = var.name
-  subnet = coalesce(var.relay_subnet, one(module.network[*].relay_subnet))
-  akvid  = azurerm_key_vault.sdm.id
-  akvdns = azurerm_key_vault.sdm.name
-  rgid   = one(module.rg[*].rgid)
+  source  = "../hcvault"
+  count   = var.create_hcvault == false ? 0 : 1
+  rg      = coalesce(var.rg, one(module.rg[*].rgname))
+  sshca   = data.sdm_ssh_ca_pubkey.ssh_pubkey_query.public_key
+  tagset  = var.tagset
+  name    = var.name
+  subnet  = coalesce(var.relay_subnet, one(module.network[*].relay_subnet))
+  akvid   = azurerm_key_vault.sdm.id
+  akvdns  = azurerm_key_vault.sdm.name
+  rgid    = one(module.rg[*].rgid)
+  vm_size = var.vm_sizes.vault
 
 }
 

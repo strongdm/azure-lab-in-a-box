@@ -19,7 +19,7 @@ resource "azurerm_postgresql_flexible_server" "server" {
   public_network_access_enabled = true
 
   // Basic tier with minimal resources for lab/demo purposes
-  sku_name   = "B_Standard_B2s"
+  sku_name   = var.db_sku
   version    = "15"
   storage_mb = 32768
 

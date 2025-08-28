@@ -32,6 +32,12 @@ variable "rg" {
   default     = null
 }
 
+variable "vm_size" {
+  description = "Azure VM size for the domain controller"
+  type        = string
+  default     = "Standard_DS1_v2"
+}
+
 resource "random_password" "admin_password" {
   length      = 20
   special     = true

@@ -51,7 +51,7 @@ resource "azurerm_linux_virtual_machine" "sdmrelay" {
   name                  = "${var.name}-sdmr01"
   resource_group_name   = coalesce(var.rg, one(module.rg[*].rgname))
   location              = var.region
-  size                  = "Standard_B1s" # Minimal VM size
+  size                  = var.vm_sizes.relay
   network_interface_ids = [azurerm_network_interface.sdm-relay-nic.id]
 
   // Custom data script that installs and configures the StrongDM relay

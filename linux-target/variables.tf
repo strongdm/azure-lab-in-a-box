@@ -36,6 +36,12 @@ variable "rg" {
   type        = string
 }
 
+variable "vm_size" {
+  description = "Azure VM size for the Linux target"
+  type        = string
+  default     = "Standard_B1s"
+}
+
 locals {
   thistagset = merge(var.tagset, {
     network = "Public"

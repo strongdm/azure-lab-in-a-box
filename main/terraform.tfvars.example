@@ -15,6 +15,22 @@ create_aks = false
 
 create_az_ro = true
 
+# VM Size Configuration (optional - uses defaults if not specified)
+# vm_sizes = {
+#   gateway           = "Standard_B1s"
+#   relay             = "Standard_B1s" 
+#   domain_controller = "Standard_DS1_v2"
+#   windows_target    = "Standard_DS1_v2"
+#   linux_target      = "Standard_B1s"
+#   vault             = "Standard_B1s"
+# }
+
+# AKS node size (optional - defaults to Standard_D2_v3)
+# aks_node_size = "Standard_D2_v3"
+
+# PostgreSQL database SKU (optional - defaults to B_Standard_B2s)
+# postgresql_sku = "B_Standard_B2s"
+
 #Onboard domain users to be managed by StrongDM
 #create_managedsecrets = true
 

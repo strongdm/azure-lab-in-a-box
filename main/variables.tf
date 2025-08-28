@@ -107,6 +107,38 @@ variable "create_hcvault" {
 }
 
 //
+// VM Size configuration variables
+//
+
+// VM sizes for different infrastructure components
+variable "vm_sizes" {
+  description = "VM sizes for different components in the lab environment"
+  type = object({
+    gateway           = optional(string, "Standard_B1s")
+    relay             = optional(string, "Standard_B1s")
+    domain_controller = optional(string, "Standard_DS1_v2")
+    windows_target    = optional(string, "Standard_DS1_v2")
+    linux_target      = optional(string, "Standard_B1s")
+    vault             = optional(string, "Standard_B1s")
+  })
+  default = {}
+}
+
+// AKS node pool VM size
+variable "aks_node_size" {
+  description = "VM size for AKS node pool"
+  type        = string
+  default     = "Standard_D2_v3"
+}
+
+// PostgreSQL database SKU
+variable "postgresql_sku" {
+  description = "PostgreSQL database SKU"
+  type        = string
+  default     = "B_Standard_B2s"
+}
+
+//
 // Tagging and naming variables
 //
 
