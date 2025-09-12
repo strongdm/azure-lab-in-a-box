@@ -35,12 +35,13 @@ resource "azurerm_network_interface" "sdm-gw-nic" {
 // StrongDM Gateway node definition that registers with the StrongDM control plane
 resource "sdm_node" "gateway" {
   gateway {
-    name           = "sdm-${var.name}-lab-gw"
-    listen_address = "${azurerm_public_ip.sdm-gw-ip.ip_address}:5000"
-    bind_address   = "0.0.0.0:5000"
+    name           = var.strongdm_naming.gateway_prefix
+    listen_address = "${azurerm_public_ip.sdm-gw-ip.ip_address}:${local.strongdm_gateway_port}"
+    bind_address   = "0.0.0.0:${local.strongdm_gateway_port}"
     tags = merge(var.tagset, {
       network = "Public"
       class   = "sdminfra"
+      "eng__${var.name}AD" = "true"
     })
   }
 }
@@ -50,8 +51,8 @@ resource "sdm_resource" "ssh-gateway" {
   ssh {
     name     = "${var.name}-sdm-gateway"
     hostname = azurerm_network_interface.sdm-gw-nic.private_ip_address
-    username = "azureuser"
-    port     = 22
+    username = var.admin_usernames.linux_admin
+    port     = var.service_ports.ssh
     tags = merge(var.tagset, {
       network = "Public"
       class   = "sdminfra"
@@ -66,15 +67,15 @@ resource "azurerm_linux_virtual_machine" "sdmgw" {
   location              = var.region
   size                  = var.vm_sizes.gateway
   network_interface_ids = [azurerm_network_interface.sdm-gw-nic.id]
+
   user_data = base64encode(templatefile("${path.module}/gw-provision.tpl", {
-    sdm_relay_token = sdm_node.gateway.gateway[0].token
-    target_user     = "azureuser"
-    vault_ip        = ""
-    #sdm_domain         = element(split(":", data.env_var.sdm_api.value), 0)
-    sdm_domain = data.env_var.sdm_api.value == "" ? "" : coalesce(join(".", slice(split(".", element(split(":", data.env_var.sdm_api.value), 0)), 1, length(split(".", element(split(":", data.env_var.sdm_api.value), 0))))), "")
-    }
-    )
-  )
+    sdm_relay_token       = sdm_node.gateway.gateway[0].token
+    target_user           = "azureuser"
+    vault_ip              = ""
+    sdm_domain            = data.env_var.sdm_api.value == "" ? "" : coalesce(join(".", slice(split(".", element(split(":", data.env_var.sdm_api.value), 0)), 1, length(split(".", element(split(":", data.env_var.sdm_api.value), 0))))), "")
+    azure_tenant_id       = data.azurerm_client_config.current.tenant_id
+    azure_subscription_id = data.azurerm_subscription.subscription.subscription_id
+  }))
 
   # Use SSH Key-based Authentication (recommended for security)
   admin_username = "azureuser"
@@ -82,20 +83,36 @@ resource "azurerm_linux_virtual_machine" "sdmgw" {
     username   = "azureuser"
     public_key = sdm_resource.ssh-gateway.ssh[0].public_key
   }
+
   # Define the OS image (Ubuntu 20.04 LTS in this example)
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
+
   source_image_reference {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
     sku       = "22_04-lts"
     version   = "latest"
   }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
   # Custom VM Tags
   tags = merge(var.tagset, {
     network = "Public"
     class   = "sdminfra"
   })
+}
+
+// Grant the StrongDM gateway's managed identity Reader access at subscription level
+// This allows the gateway to discover and scan Azure resources (VMs, SQL servers, AKS clusters)
+resource "azurerm_role_assignment" "gateway_reader" {
+  scope                = data.azurerm_subscription.subscription.id
+  role_definition_name = "Reader"
+  principal_id         = azurerm_linux_virtual_machine.sdmgw.identity[0].principal_id
+
 }

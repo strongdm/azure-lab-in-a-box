@@ -17,13 +17,16 @@ module "postgresql" {
   rg           = coalesce(var.rg, module.rg[0].rgname)
   key_vault_id = azurerm_key_vault.sdm.id
   db_sku       = var.postgresql_sku
+
+  # Ensure Key Vault permissions are ready before the module creates secrets
+  depends_on = [azurerm_role_assignment.currentuser]
+
 }
 
 // Register the PostgreSQL server as a resource in StrongDM
 // Uses Azure Key Vault as the secret store for credentials
 resource "sdm_resource" "pgsqlserver" {
-  count      = var.create_postgresql == false ? 0 : 1
-  depends_on = [module.postgresql]
+  count = var.create_postgresql == false ? 0 : 1
   postgres {
     database = "postgres"
     name     = "${var.name}-psql-server"

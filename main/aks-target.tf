@@ -15,6 +15,9 @@ module "aks" {
   rg           = coalesce(var.rg, module.rg[0].rgname)
   key_vault_id = azurerm_key_vault.sdm.id
   node_vm_size = var.aks_node_size
+
+  # Ensure Key Vault permissions are ready before the module creates secrets
+  depends_on = [azurerm_role_assignment.currentuser]
 }
 
 // Register the AKS cluster as a resource in StrongDM

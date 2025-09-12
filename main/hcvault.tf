@@ -3,6 +3,7 @@ module "hcvault" {
   source  = "../hcvault"
   count   = var.create_hcvault == false ? 0 : 1
   rg      = coalesce(var.rg, one(module.rg[*].rgname))
+  region  = var.region
   sshca   = data.sdm_ssh_ca_pubkey.ssh_pubkey_query.public_key
   tagset  = var.tagset
   name    = var.name
@@ -12,11 +13,11 @@ module "hcvault" {
   rgid    = one(module.rg[*].rgid)
   vm_size = var.vm_sizes.vault
 
+  # Only depend on user permissions - hcvault creates its own role assignment
 }
 
 resource "sdm_resource" "ssh-hcvault" {
-  count      = var.create_hcvault == false ? 0 : 1
-  depends_on = [module.hcvault]
+  count = var.create_hcvault == false ? 0 : 1
   ssh_cert {
     name     = "${var.name}-hcvault"
     hostname = one(module.hcvault[*].ip)

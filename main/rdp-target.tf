@@ -14,11 +14,12 @@ module "windowstarget" {
   domain_name  = (one(module.dc[*].netbios_domain))
   vm_size      = var.vm_sizes.windows_target
 
+  # Ensure domain controller is fully configured before creating Windows target
+  depends_on = [module.dc]
 }
 
 resource "sdm_resource" "windows-target" {
-  count      = var.create_windows_target == false ? 0 : 1
-  depends_on = [module.windowstarget]
+  count = var.create_windows_target == false ? 0 : 1
   rdp {
     name     = "${var.name}-windows-password"
     hostname = one(module.windowstarget[*].ip)
@@ -32,8 +33,7 @@ resource "sdm_resource" "windows-target" {
 }
 
 resource "sdm_resource" "windows-target-rdp" {
-  count      = var.create_windows_target == false ? 0 : 1
-  depends_on = [module.windowstarget]
+  count = var.create_windows_target == false ? 0 : 1
   rdp_cert {
     name     = "${var.name}-windows-ca"
     hostname = one(module.windowstarget[*].ip)

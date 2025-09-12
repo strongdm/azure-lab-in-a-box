@@ -10,8 +10,7 @@ module "azro" {
 }
 
 resource "sdm_resource" "azro" {
-  count      = var.create_az_ro == true ? 1 : 0
-  depends_on = [module.azro]
+  count = var.create_az_ro == true ? 1 : 0
   azure {
     name   = "${var.name}-azure-readonly"
     app_id = one(module.azro[*].app_id)

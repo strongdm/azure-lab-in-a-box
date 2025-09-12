@@ -2,19 +2,20 @@ module "sqlserver" {
   source = "../sqlserver"
   count  = var.create_mssql == false ? 0 : 1
 
-  tagset   = var.tagset
-  name     = var.name
-  relay_ip = one(module.network[*].natip)
-  region   = var.region
-  subnet   = coalesce(var.relay_subnet, one(module.network[*].relay_subnet))
-  rg       = coalesce(var.rg, module.rg[0].rgname)
-
+  tagset       = var.tagset
+  name         = var.name
+  relay_ip     = one(module.network[*].natip)
+  region       = var.region
+  subnet       = coalesce(var.relay_subnet, one(module.network[*].relay_subnet))
+  rg           = coalesce(var.rg, module.rg[0].rgname)
   key_vault_id = azurerm_key_vault.sdm.id
+
+  # Ensure Key Vault permissions are ready before the module creates secrets
+  depends_on = [azurerm_role_assignment.currentuser]
 }
 
 resource "sdm_resource" "sqlserver" {
-  count      = var.create_mssql == false ? 0 : 1
-  depends_on = [module.sqlserver]
+  count = var.create_mssql == false ? 0 : 1
 
   sql_server {
     database        = module.sqlserver[0].dbname

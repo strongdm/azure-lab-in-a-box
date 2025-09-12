@@ -16,6 +16,11 @@ sudo ./sdm install --relay --token=$SDM_RELAY_TOKEN --user=$TARGET_USER --domain
 %{ if sdm_domain == "" }
 sudo ./sdm install --relay --token=$SDM_RELAY_TOKEN --user=$TARGET_USER| logger -t sdminstall
 %{ endif }
+
+# Add Azure environment variables to SDM proxy configuration
+sudo printf "\nAZURE_TENANT_ID=${azure_tenant_id}\n" >> /etc/sysconfig/sdm-proxy
+sudo printf "AZURE_SUBSCRIPTION_ID=${azure_subscription_id}\n" >> /etc/sysconfig/sdm-proxy
+
 %{ if vault_ip != "" }
 #Give Vault 120 seconds to warm up
 sleep 120

@@ -29,6 +29,14 @@ resource "azurerm_role_assignment" "sdmrelay" {
   principal_id         = azurerm_linux_virtual_machine.sdmrelay.identity[0].principal_id
   role_definition_name = "Key Vault Secrets Officer" # This allows the Managed Identity to read/write secrets
   scope                = azurerm_key_vault.sdm.id
+
+}
+
+// Grant the StrongDM gateway's managed identity access to read secrets
+resource "azurerm_role_assignment" "sdmgateway" {
+  principal_id         = azurerm_linux_virtual_machine.sdmgw.identity[0].principal_id
+  role_definition_name = "Key Vault Secrets Officer" # This allows the Managed Identity to read/write secrets
+  scope                = azurerm_key_vault.sdm.id
 }
 
 // Grant the current user full administrative access to the Key Vault
@@ -36,6 +44,7 @@ resource "azurerm_role_assignment" "currentuser" {
   principal_id         = data.azurerm_client_config.current.object_id
   role_definition_name = "Key Vault Administrator"
   scope                = azurerm_key_vault.sdm.id
+
 }
 
 // Register the Azure Key Vault as a secret store in StrongDM
