@@ -62,6 +62,8 @@ resource "azurerm_key_vault_key" "hcvault" {
     "wrapKey",
   ]
 
+  # Key creation handled by main module dependencies
+
   // Key rotation policy
   rotation_policy {
     automatic {

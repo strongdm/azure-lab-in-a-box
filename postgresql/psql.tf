@@ -24,6 +24,10 @@ resource "azurerm_postgresql_flexible_server" "server" {
   storage_mb = 32768
 
   tags = local.thistagset
+
+  lifecycle {
+    ignore_changes = [zone]
+  }
 }
 
 // Firewall rule to allow access from the StrongDM relay
@@ -40,6 +44,7 @@ resource "azurerm_key_vault_secret" "psql-username" {
   value        = var.target_user
   key_vault_id = var.key_vault_id
   tags         = local.thistagset
+
 }
 
 // Store PostgreSQL password in Azure Key Vault
@@ -48,4 +53,5 @@ resource "azurerm_key_vault_secret" "psql-password" {
   value        = local.admin_password
   key_vault_id = var.key_vault_id
   tags         = local.thistagset
+
 }

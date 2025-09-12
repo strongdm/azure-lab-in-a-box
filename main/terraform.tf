@@ -12,7 +12,7 @@ terraform {
     }
     sdm = {
       source  = "strongdm/sdm"
-      version = ">=3.3.0"
+      version = "~> 14.20"
     }
     azuread = {
       source = "hashicorp/azuread"

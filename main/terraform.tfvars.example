@@ -1,10 +1,21 @@
-tagset    = { environment = "Lab"
-              customer    = "Partners"
-              sdm-owner   = "foobar@strongdm.com"
-	      cloud       = "Azure"
+tagset    = { 
+  environment = "Lab"
+  customer    = "Partners"
+  sdm-owner   = "foobar@strongdm.com"
+	cloud       = "Azure"
 }
 
 name      = "partnertraining"
+
+# Azure region (optional - defaults to ukwest)  
+# region = "ukwest"
+
+# Network configuration (optional - uses defaults if not specified)
+# Note: These are passed to the network module when creating new VNet
+# vnet_address_space = ["10.0.0.0/16"]
+# gateway_subnet_prefix = "10.0.1.0/24"
+# relay_subnet_prefix = "10.0.2.0/24" 
+# allowed_ssh_cidr_blocks = ["0.0.0.0/0"]  # Restrict SSH access - use your IP range
 
 create_linux_target = false
 create_postgresql = false
@@ -30,6 +41,30 @@ create_az_ro = true
 
 # PostgreSQL database SKU (optional - defaults to B_Standard_B2s)
 # postgresql_sku = "B_Standard_B2s"
+
+# Service ports configuration (optional - uses standard defaults)
+# Note: StrongDM gateway port is fixed at 5000
+# service_ports = {
+#   ssh        = 22
+#   rdp        = 3389
+#   sql_server = 1433
+#   postgresql = 5432
+#   vault      = 8200
+# }
+
+# Administrative usernames (optional - uses defaults)
+# admin_usernames = {
+#   linux_admin   = "azureuser"
+#   windows_admin = "azureadmin"
+#   postgres_admin = "pgadmin"
+# }
+
+# StrongDM node naming (optional - uses defaults)
+# strongdm_naming = {
+#   gateway_prefix = "sdm-lab-gateway"
+#   relay_prefix   = "sdm-lab-relay"
+#   domain_name    = "strongdm.local"
+# }
 
 #Onboard domain users to be managed by StrongDM
 #create_managedsecrets = true

@@ -12,7 +12,7 @@ resource "azurerm_virtual_network" "vn" {
   name                = "${var.name}-vn"
   location            = var.region
   resource_group_name = var.rg
-  address_space       = ["10.0.0.0/16"]
+  address_space       = var.vnet_address_space
 
   tags = local.thistagset
 }
@@ -20,7 +20,7 @@ resource "azurerm_virtual_network" "vn" {
 // Public subnet used for StrongDM gateway components
 resource "azurerm_subnet" "gateway" {
   resource_group_name  = var.rg
-  address_prefixes     = ["10.0.1.0/24"]
+  address_prefixes     = [var.gateway_subnet_prefix]
   name                 = "${var.name}-gateway"
   virtual_network_name = azurerm_virtual_network.vn.name
 
@@ -29,7 +29,7 @@ resource "azurerm_subnet" "gateway" {
 // Private subnet used for StrongDM relay and target components
 resource "azurerm_subnet" "relay" {
   resource_group_name  = var.rg
-  address_prefixes     = ["10.0.2.0/24"]
+  address_prefixes     = [var.relay_subnet_prefix]
   name                 = "${var.name}-relay"
   virtual_network_name = azurerm_virtual_network.vn.name
 }
@@ -106,12 +106,12 @@ resource "azurerm_network_security_group" "gateway" {
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
-    destination_port_range     = "5000"
+    destination_port_range     = tostring(var.strongdm_port)
     source_port_range          = "*"
     source_address_prefix      = "Internet"
     destination_address_prefix = "VirtualNetwork"
   }
-  #SSH Access for troubleshooting
+  #SSH Access for troubleshooting - restricted to allowed CIDR blocks
   security_rule {
     name                       = "Allow-Accessing-SSH"
     priority                   = 101
@@ -120,7 +120,7 @@ resource "azurerm_network_security_group" "gateway" {
     protocol                   = "Tcp"
     destination_port_range     = "22"
     source_port_range          = "*"
-    source_address_prefix      = "Internet"
+    source_address_prefix      = local.ssh_source_addresses
     destination_address_prefix = "VirtualNetwork"
   }
   security_rule {

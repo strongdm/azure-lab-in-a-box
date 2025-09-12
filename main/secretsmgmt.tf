@@ -9,11 +9,15 @@ module "secretsmgmt" {
   tags           = each.value.tags
   SamAccountName = each.value.SamAccountName
 
+  # Ensure secret engine is fully created with valid public key
+  depends_on = [sdm_secret_engine.ad]
 }
 
 resource "sdm_secret_engine" "ad" {
-  count      = (try(var.domain_users) == false || var.create_managedsecrets == false || var.create_domain_controller == false) ? 0 : 1
-  depends_on = [sdm_node.relay]
+  count = var.create_domain_controller ? 1 : 0
+  # Note: This resource requires the Domain Controller to be fully configured with LDAP services
+  # For reliable deployment, run with create_managedsecrets=false first, then enable after DC setup
+  depends_on             = [sdm_node.relay]
   active_directory {
     binddn                 = "CN=${one(module.dc[*].domain_admin)},CN=Users,DC=${var.name},DC=local"
     bindpass               = one(module.dc[*].domain_password)
@@ -23,5 +27,8 @@ resource "sdm_secret_engine" "ad" {
     secret_store_root_path = "${var.name}AD"
     url                    = "ldaps://${one(module.dc[*].dc_ip)}/"
     max_backoff_duration   = "24h0m0s"
+    tags = {
+      "eng__${var.name}AD" = "true"
+    }
   }
 }

@@ -57,6 +57,7 @@ resource "azurerm_key_vault_secret" "ssh-key" {
   value        = tls_private_key.key.private_key_openssh
   key_vault_id = var.key_vault_id
   tags         = local.thistagset
+
 }
 
 // Store cluster CA certificate in Azure Key Vault
@@ -65,6 +66,7 @@ resource "azurerm_key_vault_secret" "ca-cert" {
   value        = base64decode(azurerm_kubernetes_cluster.k8s.kube_config[0].cluster_ca_certificate)
   key_vault_id = var.key_vault_id
   tags         = local.thistagset
+
 }
 
 // Store client key in Azure Key Vault
@@ -73,6 +75,7 @@ resource "azurerm_key_vault_secret" "client-key" {
   value        = base64decode(azurerm_kubernetes_cluster.k8s.kube_config[0].client_key)
   key_vault_id = var.key_vault_id
   tags         = local.thistagset
+
 }
 
 // Store client certificate in Azure Key Vault
@@ -81,4 +84,5 @@ resource "azurerm_key_vault_secret" "client-cert" {
   value        = base64decode(azurerm_kubernetes_cluster.k8s.kube_config[0].client_certificate)
   key_vault_id = var.key_vault_id
   tags         = local.thistagset
+
 }
