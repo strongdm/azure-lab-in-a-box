@@ -38,7 +38,24 @@ The lab environment creates a secure network architecture with:
 
 In addition to the usual access credentials for Azure, the modules require an access key to StrongDM with the following privileges:
 
-![StrongDM Permissions](doc/strongdm-permissions.png?raw=true)
+The API token requires the following permissions:
+
+**Secret Store Management:**
+- `secretstore:list`, `secretstore:create`, `secretstore:update`, `secretstore:delete`
+
+**Infrastructure Management:**
+- `organization:view_settings`
+- `relay:list`, `relay:create`
+- `policy:read`, `policy:write`
+
+**Resource Management:**
+- `datasource:list`, `datasource:create`, `datasource:update`, `datasource:delete`, `datasource:healthcheck`
+- `resourcelock:delete`, `resourcelock:list`
+- `accessrequest:requester`
+
+**Secret Engine & Managed Secrets:**
+- `secretengine:create`, `secretengine:list`, `secretengine:delete`, `secretengine:update`
+- `managedsecret:list`, `managedsecret:update`, `managedsecret:create`, `managedsecret:read`, `managedsecret:delete`
 
 You can create the token with the following command:
 
