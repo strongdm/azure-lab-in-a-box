@@ -56,3 +56,12 @@ data "azurerm_client_config" "current" {}
 data "env_var" "sdm_api" {
   id = "SDM_API_HOST"
 }
+
+// Validation to ensure SDM_API_HOST is in the correct format
+locals {
+  sdm_api_validation = (
+    data.env_var.sdm_api.value == "" ? true :
+    can(regex("^[a-zA-Z0-9.-]+:[0-9]+$", data.env_var.sdm_api.value)) ? true :
+    tobool("ERROR: SDM_API_HOST must be in format 'hostname:port' (e.g., 'app.strongdm.com:443' or 'api.eu.strongdm.com:443'). Do NOT include 'http://' or 'https://' prefix. Current value: '${data.env_var.sdm_api.value}'")
+  )
+}

@@ -75,9 +75,21 @@ $env:SDM_API_ACCESS_KEY="auth-xxxxxx888x8x88x8x6"
 $env:SDM_API_SECRET_KEY="X4fasfasfasfasfasfsafaaqED34ge5343CkQ"
 ```
 
-> [!NOTE]
-> If your control plane is in the UK, or the EU, make sure that the SDM_API_HOST variable is correctly set.
-> Gateways and relays *will* use this variable as well to register against the right tenant
+> [!IMPORTANT]
+> **SDM_API_HOST Configuration**
+>
+> If your control plane is in the UK or EU region, you **must** set the `SDM_API_HOST` environment variable.
+> Gateways and relays will use this variable to register against the correct tenant.
+>
+> **Required Format**: `hostname:port` (e.g., `api.uk.strongdm.com:443`)
+>
+> **Important**:
+> - **DO NOT** include `http://` or `https://` prefix
+> - **DO** include the port number (typically `:443`)
+> - Common values:
+>   - US: `api.strongdm.com:443` (or `app.strongdm.com:443`)
+>   - EU: `api.eu.strongdm.com:443`
+>   - UK: `api.uk.strongdm.com:443`
 
 ```bash
 export SDM_API_HOST=api.uk.strongdm.com:443
