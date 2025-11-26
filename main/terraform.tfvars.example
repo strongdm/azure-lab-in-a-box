@@ -28,6 +28,7 @@ create_aks = false
 create_az_ro = true
 create_blob_ro = false
 create_blob_full = false
+create_datafactory = false
 
 # VM Size Configuration (optional - uses defaults if not specified)
 # vm_sizes = {

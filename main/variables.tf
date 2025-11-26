@@ -131,6 +131,13 @@ variable "create_blob_full" {
   default     = false
 }
 
+// Flag to enable creation of Azure Data Factory (equivalent to AWS Glue)
+variable "create_datafactory" {
+  description = "Create a service principal with full access to Azure Data Factory"
+  type        = bool
+  default     = false
+}
+
 // Flag to enable creation of HashiCorp Vault instance
 variable "create_hcvault" {
   description = "Create a HashiCorp Vault Development Instance for testing"
