@@ -20,6 +20,7 @@ name      = "partnertraining"
 create_linux_target = false
 create_postgresql = false
 create_mssql = false
+create_cosmosdb = false
 create_domain_controller = false
 create_windows_target = false
 create_aks = false

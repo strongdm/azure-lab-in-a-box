@@ -17,7 +17,7 @@ resource "sdm_secret_engine" "ad" {
   count = var.create_domain_controller ? 1 : 0
   # Note: This resource requires the Domain Controller to be fully configured with LDAP services
   # For reliable deployment, run with create_managedsecrets=false first, then enable after DC setup
-  depends_on             = [sdm_node.relay]
+  depends_on = [sdm_node.relay]
   active_directory {
     binddn                 = "CN=${one(module.dc[*].domain_admin)},CN=Users,DC=${var.name},DC=local"
     bindpass               = one(module.dc[*].domain_password)

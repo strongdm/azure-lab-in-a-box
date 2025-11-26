@@ -82,6 +82,13 @@ variable "create_mssql" {
   default     = false
 }
 
+// Flag to enable creation of Cosmos DB with MongoDB API (equivalent to AWS DocumentDB)
+variable "create_cosmosdb" {
+  description = "Flag to create an Azure Cosmos DB instance with MongoDB API"
+  type        = bool
+  default     = false
+}
+
 // Flag to enable creation of Windows Domain Controller
 variable "create_domain_controller" {
   description = "Flag to create a domain controller"

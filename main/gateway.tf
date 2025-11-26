@@ -39,8 +39,8 @@ resource "sdm_node" "gateway" {
     listen_address = "${azurerm_public_ip.sdm-gw-ip.ip_address}:${local.strongdm_gateway_port}"
     bind_address   = "0.0.0.0:${local.strongdm_gateway_port}"
     tags = merge(var.tagset, {
-      network = "Public"
-      class   = "sdminfra"
+      network              = "Public"
+      class                = "sdminfra"
       "eng__${var.name}AD" = "true"
     })
   }

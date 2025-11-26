@@ -38,8 +38,8 @@ resource "sdm_resource" "ssh-relay" {
     username = var.admin_usernames.linux_admin
     port     = var.service_ports.ssh
     tags = merge(var.tagset, {
-      network             = "Private"
-      class               = "sdminfra"
+      network              = "Private"
+      class                = "sdminfra"
       "eng__${var.name}AD" = "true"
 
     })
