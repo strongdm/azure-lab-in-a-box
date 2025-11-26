@@ -117,6 +117,20 @@ variable "create_az_ro" {
   default     = false
 }
 
+// Flag to enable creation of Azure Blob Storage read-only access (equivalent to AWS S3 read-only)
+variable "create_blob_ro" {
+  description = "Create a service principal with read-only access to Azure Blob Storage"
+  type        = bool
+  default     = false
+}
+
+// Flag to enable creation of Azure Blob Storage full access (equivalent to AWS S3 full access)
+variable "create_blob_full" {
+  description = "Create a service principal with full access to Azure Blob Storage"
+  type        = bool
+  default     = false
+}
+
 // Flag to enable creation of HashiCorp Vault instance
 variable "create_hcvault" {
   description = "Create a HashiCorp Vault Development Instance for testing"
