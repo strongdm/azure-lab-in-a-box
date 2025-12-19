@@ -106,6 +106,13 @@ variable "create_az_ro" {
   default     = false
 }
 
+// Flag to enable creation of Microsoft Entra ID group management resource
+variable "create_entra_id" {
+  description = "Create a Microsoft Entra ID resource for group management in StrongDM"
+  type        = bool
+  default     = false
+}
+
 // Flag to enable creation of Azure Blob Storage read-only access (equivalent to AWS S3 read-only)
 variable "create_blob_ro" {
   description = "Create a service principal with read-only access to Azure Blob Storage"
