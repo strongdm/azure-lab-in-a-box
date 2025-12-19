@@ -8,11 +8,11 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3"
+      version = ">= 3"
     }
     sdm = {
       source  = "strongdm/sdm"
-      version = "~> 14.20"
+      version = ">= 14"
     }
     azuread = {
       source = "hashicorp/azuread"

@@ -45,7 +45,7 @@ resource "azurerm_cosmosdb_account" "mongodb" {
   }
 
   # Firewall: Allow access from the StrongDM relay IP
-  ip_range_filter = var.relay_ip != null ? var.relay_ip : null
+  ip_range_filter = var.relay_ip != null ? toset([var.relay_ip]) : null
 
   # Allow access from Azure services (needed for some management operations)
   is_virtual_network_filter_enabled = false

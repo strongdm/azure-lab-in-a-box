@@ -16,17 +16,6 @@ variable "region" {
   description = "Azure Region to create resources on"
   type        = string
   default     = "ukwest"
-  validation {
-    condition = contains([
-      "eastus", "eastus2", "centralus", "northcentralus", "southcentralus", "westcentralus",
-      "westus", "westus2", "westus3", "canadacentral", "canadaeast", "brazilsouth",
-      "northeurope", "westeurope", "uksouth", "ukwest", "francecentral", "germanycenter",
-      "norwayeast", "switzerlandnorth", "japaneast", "japanwest", "koreacentral",
-      "australiaeast", "australiasoutheast", "southafricanorth", "southeastasia",
-      "eastasia", "centralindia", "southindia", "westindia"
-    ], var.region)
-    error_message = "The region must be a valid Azure region."
-  }
 }
 
 // Existing resource group name (optional)

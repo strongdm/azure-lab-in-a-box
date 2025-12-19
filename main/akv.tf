@@ -21,7 +21,7 @@ resource "azurerm_key_vault" "sdm" {
   tenant_id = data.azurerm_client_config.current.tenant_id
 
   // Use RBAC for access control instead of vault policies
-  enable_rbac_authorization = true
+  rbac_authorization_enabled = true
 }
 
 // Grant the StrongDM relay's managed identity access to read secrets

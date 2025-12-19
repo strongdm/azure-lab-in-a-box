@@ -1,14 +1,13 @@
 # Azure Cosmos DB Module (MongoDB API)
 
-This module creates an Azure Cosmos DB account with MongoDB API compatibility, equivalent to AWS DocumentDB. It provides a MongoDB-compatible database service that can be managed through StrongDM.
+This module creates an Azure Cosmos DB account with MongoDB API compatibility for StrongDM access demonstrations.
 
 ## Features
 
-- Azure Cosmos DB account with MongoDB API
-- Serverless capacity mode for cost-efficient lab environments
-- Firewall rules for secure access from StrongDM relay
+- Cosmos DB account with MongoDB API
+- Serverless capacity mode
+- Firewall rules for StrongDM relay access
 - Credentials stored in Azure Key Vault
-- Session consistency level
 
 ## Usage
 
@@ -19,7 +18,7 @@ module "cosmosdb" {
   name         = "mylab"
   region       = "ukwest"
   rg           = "my-resource-group"
-  relay_ip     = "10.0.0.5"
+  relay_ip     = module.relay.ip
   key_vault_id = azurerm_key_vault.sdm.id
   tagset       = var.tagset
 }
@@ -29,15 +28,15 @@ module "cosmosdb" {
 
 | Name | Description | Type | Default |
 |------|-------------|------|---------|
-| name | Arbitrary string to add to resources | string | - |
-| region | Azure Region to create resources on | string | - |
+| name | Name prefix for resources | string | - |
+| region | Azure region | string | - |
 | rg | Resource group name | string | - |
-| relay_ip | Relay IP to allow through firewall | string | null |
-| key_vault_id | Key Vault ID for storing secrets | string | null |
-| username | Username for Cosmos DB | string | "cosmosadmin" |
-| throughput | Database throughput in RU/s | number | 400 |
-| db_name | Name of the MongoDB database | string | "labdb" |
 | tagset | Tags to apply to resources | map(string) | - |
+| relay_ip | Relay IP for firewall rules | string | null |
+| key_vault_id | Key Vault ID for credentials | string | null |
+| username | Username for Cosmos DB | string | "cosmosadmin" |
+| throughput | Database throughput (RU/s) | number | 400 |
+| db_name | MongoDB database name | string | "labdb" |
 
 ## Outputs
 
@@ -48,13 +47,11 @@ module "cosmosdb" {
 | port | MongoDB connection port (10255) |
 | account_name | Account name (used as username) |
 | primary_key | Primary key (used as password) |
-| database_name | Name of the MongoDB database |
+| database_name | MongoDB database name |
 | thistagset | Tags applied to resources |
 | account_id | Cosmos DB account ID |
 
 ## Notes
 
-- Cosmos DB with MongoDB API uses port 10255 (not the standard MongoDB port 27017)
-- The account name is used as the username for authentication
-- The primary key is used as the password for authentication
-- Serverless mode is used for cost efficiency; consider provisioned throughput for production
+- Uses port 10255 (not standard MongoDB port 27017)
+- Account name is used as username, primary key as password

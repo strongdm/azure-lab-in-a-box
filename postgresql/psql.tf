@@ -20,7 +20,7 @@ resource "azurerm_postgresql_flexible_server" "server" {
 
   // Basic tier with minimal resources for lab/demo purposes
   sku_name   = var.db_sku
-  version    = "15"
+  version    = "16"
   storage_mb = 32768
 
   tags = local.thistagset
