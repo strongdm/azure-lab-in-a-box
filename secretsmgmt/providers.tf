@@ -4,9 +4,9 @@ terraform {
 
     sdm = {
       source  = "strongdm/sdm"
-      version = ">= 14" # Requires StrongDM provider v14.20+ for all features
+      version = "~> 17.0"
     }
   }
 
-  required_version = ">= 1.1.0" # Requires Terraform 1.1.0+
+  required_version = ">= 1.5.0"
 }

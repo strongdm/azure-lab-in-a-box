@@ -8,30 +8,33 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3"
+      version = "~> 4.0"
     }
     sdm = {
       source  = "strongdm/sdm"
-      version = ">= 14"
+      version = "~> 17.0"
     }
     azuread = {
-      source = "hashicorp/azuread"
+      source  = "hashicorp/azuread"
+      version = "~> 3.0"
     }
     env = {
-      source = "tcarreira/env"
+      source  = "tcarreira/env"
+      version = "~> 0.2"
     }
   }
 
-  required_version = ">= 1.1.0"
+  required_version = ">= 1.5.0"
 }
 
-/* 
+/*
  * Azure Resource Manager provider configuration
- * Configures the behavior for resource deletion:
- * - Allows deletion of resource groups even when they contain resources
- * - Automatically deletes OS disks when VMs are deleted
+ * azurerm v4 requires subscription_id (or ARM_SUBSCRIPTION_ID env var) to be set.
+ * Set ARM_SUBSCRIPTION_ID in your environment, or override via var.subscription_id.
  */
 provider "azurerm" {
+  subscription_id = var.subscription_id
+
   features {
     resource_group {
       prevent_deletion_if_contains_resources = false

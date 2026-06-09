@@ -8,6 +8,15 @@
  */
 
 //
+// Azure subscription. Required by azurerm v4+; falls back to ARM_SUBSCRIPTION_ID env var if null.
+//
+variable "subscription_id" {
+  description = "Azure Subscription ID. If null, the ARM_SUBSCRIPTION_ID environment variable must be set."
+  type        = string
+  default     = null
+}
+
+//
 // Network configuration variables
 //
 
